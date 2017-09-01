@@ -4,7 +4,7 @@
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JavaScript " useProjectSettings="false">
         <compilerSettings>
-          <option name="additionalArguments" value="-output /home/andrey/giislab/target/classes/giis-lab.js" />
+          <option name="additionalArguments" value="-output /home/andrey/Dropbox/giis/giislab/target/classes/giis-lab.js" />
         </compilerSettings>
         <compilerArguments>
           <option name="outputFile" value="$MODULE_DIR$/target/classes/giis-lab.js" />
