@@ -5,25 +5,27 @@
     <title>GIIS labs</title>
     <script type="text/javascript" src="target/classes/lib/kotlin.js"></script>
     <script type="text/javascript" src="target/classes/giis-lab.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/giis.css">
 </head>
 
 <body>
-<h1>Lab 1</h1>
-<p>
-    <span>X1:</span><input id="x1" type="number" value="10">
-    <span>Y1:</span><input id="y1" type="number" value="10">
-</p>
-<p>
-    <span>X2:</span><input id="x2" type="number" value="100">
-    <span>Y2:</span><input id="y2" type="number" value="100">
-</p>
-<button id="draw-lab-1">Draw</button>
-<h2>DDA</h2>
-<canvas id="DDA" width="150" height="150"></canvas>
-<h2>Bresenham</h2>
-<canvas id="Bresenham" width="150" height="150"></canvas>
-<h2>Wu</h2>
-<canvas id="Wu" width="150" height="150"></canvas>
+<div class="container row">
+    <div class="col-sm-4">
+        <div id="lines">
+            <h1>Lines</h1>
+            <div class="btn-group" >
+                <button id="dda" type="button" class="btn btn-primary">DDA</button>
+                <button id="bresenham" type="button" class="btn btn-primary">Bresenham</button>
+                <button id="wu" type="button" class="btn btn-primary">Wu</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <canvas class="center-block" id="canvas" width="800" height="600"></canvas>
+    </div>
+</div>
+
 </body>
 
 </html>

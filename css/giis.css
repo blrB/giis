@@ -1,0 +1,7 @@
+#canvas {
+    border: 2px solid black;
+    position: fixed;
+    display: table-cell;
+    vertical-align: middle;
+    margin-top: 25px;
+}
