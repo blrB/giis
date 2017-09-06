@@ -35,5 +35,5 @@ fun getMousePosOnCanvas(canvas: HTMLCanvasElement, event: Event): Coordinate {
     val evt = event as MouseEvent
     val x = evt.clientX - rect.left
     val y = evt.clientY - rect.top
-    return Coordinate(x, y)
+    return Coordinate(x / Config.scale, y / Config.scale)
 }
