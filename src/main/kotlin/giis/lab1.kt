@@ -123,6 +123,12 @@ fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElem
 fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
     val (x1, y1) = source
     val (x2, y2) = target
+
+    if (x1 == x2 || y1 == y2) {
+        drawBresenham(source, target, canvas)
+        return
+    }
+
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     console.log("\nDraw Wu: ($x1;$y1) and ($x2;$y2)")
 
