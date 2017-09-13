@@ -4,6 +4,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.js.Math
 
 fun initLab1() {
@@ -45,6 +46,7 @@ fun drawLine(elementId: String, drawAlgorithm: (p1: Coordinate, p2: Coordinate, 
 }
 
 fun drawDDA(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
+    console.log("start")
     val (x1, y1) = source
     val (x2, y2) = target
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
@@ -67,6 +69,7 @@ fun drawDDA(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
         console.log("Step $i: x:$x; y:$y, Plot(${x.toInt()},${y.toInt()})")
         i++
     }
+    //context.render()
 }
 
 fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
@@ -85,11 +88,11 @@ fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElem
     val changeX = if (x1 < x2) 1 else -1
     val changeY = if (y1 < y2) 1 else -1
 
-    context.drawPixel(x.toInt(), y.toInt())
+    context.drawPixel(x, y)
     var i = 1
     if (dx >= dy) {
         e = 2 * dy - dx
-        console.log("Step 0: x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+        console.log("Step 0: x:$x; y:$y, e':$e Plot(${x},${y})")
         while (i <= dx) {
             val eOld = e
             if (e >= 0) {
@@ -98,13 +101,13 @@ fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElem
             }
             x += changeX
             e += 2 * dy
-            context.drawPixel(x.toInt(), y.toInt())
-            console.log("Step $i: e:$eOld, x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+            context.drawPixel(x, y)
+            console.log("Step $i: e:$eOld, x:$x; y:$y, e':$e Plot($x,$y)")
             i++
         }
     } else {
         e = 2 * dx - dy
-        console.log("Step 0: x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+        console.log("Step 0: x:$x; y:$y, e':$e Plot($x,$y)")
         while (i <= dy) {
             val eOld = e
             if (e >= 0) {
@@ -113,11 +116,12 @@ fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElem
             }
             y += changeY
             e += 2 * dx
-            context.drawPixel(x.toInt(), y.toInt())
-            console.log("Step $i: e:$eOld, x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+            context.drawPixel(x, y)
+            console.log("Step $i: e:$eOld, x:$x; y:$y, e':$e Plot($x,$y)")
             i++
         }
     }
+    //context.render()
 }
 
 fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
@@ -142,11 +146,11 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
     val changeX = if (x1 < x2) 1 else -1
     val changeY = if (y1 < y2) 1 else -1
 
-    context.drawPixel(x.toInt(), y.toInt())
+    context.drawPixel(x, y)
     var i = 1
     if (dx >= dy) {
         e = dy / dx - 0.5
-        console.log("Step 0: x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+        console.log("Step 0: x:$x; y:$y, e':$e Plot($x,$y)")
         while (i <= dx) {
             if (e >= 0) {
                 y += changeY
@@ -154,19 +158,19 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
             }
             x += changeX
             e += dy / dx
-            context.drawPixel(x.toInt(), y.toInt())
+            context.drawPixel(x, y)
             val a = Math.abs(e)
             if (e < 0) {
-                context.drawAlfaPixel(x.toInt(), y.toInt() - changeY, a)
+                context.drawAlfaPixel(a, x, y - changeY)
             } else {
-                context.drawAlfaPixel(x.toInt(), y.toInt() + changeY, a)
+                context.drawAlfaPixel(a, x, y + changeY)
             }
-            console.log("Step $i: e:$e, x:$x; y:$y, a:$a Plot(${x.toInt()},${y.toInt()})")
+            console.log("Step $i: e:$e, x:$x; y:$y, a:$a Plot($x,$y)")
             i++
         }
     } else {
         e = dx / dy - 0.5
-        console.log("Step 0: x:$x; y:$y, e':$e Plot(${x.toInt()},${y.toInt()})")
+        console.log("Step 0: x:$x; y:$y, e':$e Plot($x,$y)")
         while (i <= dy) {
             if (e >= 0) {
                 x += changeX
@@ -174,15 +178,16 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
             }
             y += changeY
             e += dx / dy
-            context.drawPixel(x.toInt(), y.toInt())
+            context.drawPixel(x, y)
             val a = Math.abs(e)
             if (e < 0) {
-                context.drawAlfaPixel(x.toInt() - changeX, y.toInt(), a)
+                context.drawAlfaPixel(a, x - changeX, y)
             } else {
-                context.drawAlfaPixel(x.toInt() + changeX, y.toInt(), a)
+                context.drawAlfaPixel(a, x + changeX, y)
             }
-            console.log("Step $i: e:$e, x:$x; y:$y, a:$a Plot(${x.toInt()},${y.toInt()})")
+            console.log("Step $i: e:$e, x:$x; y:$y, a:$a Plot($x,$y)")
             i++
         }
     }
+    //context.render()
 }
