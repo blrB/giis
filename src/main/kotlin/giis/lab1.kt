@@ -67,7 +67,6 @@ fun drawLine(elementId: String, drawAlgorithm: (p1: Coordinate, p2: Coordinate, 
 }
 
 fun drawDDA(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
-    console.log("start")
     val (x1, y1) = source
     val (x2, y2) = target
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
@@ -89,7 +88,6 @@ fun drawDDA(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
         window.setTimeout(::waitDrawDDA, 100 * i, context, i, x, y)
         i++
     }
-    //context.render()
 }
 
 fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
@@ -140,7 +138,6 @@ fun drawBresenham(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElem
             i++
         }
     }
-    //context.render()
 }
 
 fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
@@ -194,5 +191,4 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
             i++
         }
     }
-    //context.render()
 }

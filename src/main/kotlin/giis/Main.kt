@@ -6,8 +6,8 @@ import kotlin.browser.document
 import kotlin.browser.window
 
 object Scene {
-    val size = 150
-    val scale = 4.0
+    val size = 75
+    val scale = 8.0
     val array = Array4D<Color>(size, size, 1, 1)
 }
 
