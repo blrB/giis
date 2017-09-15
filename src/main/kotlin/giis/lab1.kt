@@ -40,13 +40,13 @@ fun waitDrawBresenham(context: CanvasRenderingContext2D, i: Int, x: Int, y: Int,
     console.log("Step $i: e:$eOld, x:$x; y:$y, e':$e Plot($x,$y)")
 }
 
-fun waitDrawWu(context: CanvasRenderingContext2D, i: Int, x: Int, y: Int, e: Double, change: Int){
+fun waitDrawWu(context: CanvasRenderingContext2D, i: Int, x: Int, y: Int, e: Double, changeX: Int, changeY: Int){
     context.drawPixel(x, y)
     val a = Math.abs(e)
     if (e < 0) {
-        context.drawAlfaPixel(a, x - change, y)
+        context.drawAlfaPixel(a, x - changeX, y - changeY)
     } else {
-        context.drawAlfaPixel(a, x + change, y)
+        context.drawAlfaPixel(a, x + changeX, y + changeY)
     }
     console.log("Step $i: e:$e, x:$x; y:$y, a:$a Plot($x,$y)")
 }
@@ -174,7 +174,7 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
             }
             x += changeX
             e += dy / dx
-            window.setTimeout(::waitDrawWu, 100 * i, context, i, x, y, e, changeY)
+            window.setTimeout(::waitDrawWu, 100 * i, context, i, x, y, e, 0, changeY)
             i++
         }
     } else {
@@ -187,7 +187,7 @@ fun drawWu(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
             }
             y += changeY
             e += dx / dy
-            window.setTimeout(::waitDrawWu, 100 * i, context, i, x, y, e, changeX)
+            window.setTimeout(::waitDrawWu, 100 * i, context, i, x, y, e, changeX, 0)
             i++
         }
     }
