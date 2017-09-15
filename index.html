@@ -5,6 +5,8 @@
     <title>GIIS labs</title>
     <script type="text/javascript" src="target/classes/lib/kotlin.js"></script>
     <script type="text/javascript" src="target/classes/giis-lab.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/giis.css">
 </head>
@@ -12,6 +14,21 @@
 <body>
 <div class="container row">
     <div class="col-sm-4">
+        <div id="scale">
+            <h1>GIIS labs</h1>
+            <div class="btn-group">
+                <button id="clean" type="button" class="btn btn-primary">Clean</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Scale<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="scale" id="scale-1">1</a></li>
+                    <li><a class="scale" id="scale-2">2</a></li>
+                    <li><a class="scale" id="scale-4">4</a></li>
+                    <li><a class="scale" id="scale-8">8</a></li>
+                </ul>
+            </div>
+        </div>
         <div id="lines">
             <h1>Lines</h1>
             <div class="btn-group" >

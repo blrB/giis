@@ -25,7 +25,7 @@ data class Color(val r: Int,
 }
 
 fun CanvasRenderingContext2D.render() {
-    this.clearRect(0.0, 0.0, Scene.size * Scene.scale, Scene.size * Scene.scale)
+    this.clearRect(0.0, 0.0, Scene.size.toDouble(), Scene.size.toDouble())
 
     Scene.array.forEachIndexed { x, y, z, a, color ->
         this.fillStyle = if (color != null) "rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})"
@@ -35,6 +35,7 @@ fun CanvasRenderingContext2D.render() {
 }
 
 fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
+    this.fillStyle = "rgba(0, 0, 0, 1)"
     Scene.array.set(x, y, z, a, Color(0,0,0,1.0))
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
 }
