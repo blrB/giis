@@ -6,8 +6,8 @@ import kotlin.browser.window
 
 object Scene {
     var scale = 8.0
-    val size = 75
-    val array = Array4D<Color>(size, size, 1, 1)
+    var size = 75
+    var array = Array4D<Color>(size, size, 1, 1)
 }
 
 
@@ -35,6 +35,7 @@ fun init() {
 
     val buttonClean = document.getElementById("clean") as HTMLButtonElement
     buttonClean.onclick = {
+        Scene.array = Array4D(Scene.size, Scene.size, 1, 1)
         context.clearRect(0.0, 0.0, Scene.size.toDouble(), Scene.size.toDouble())
     }
 
