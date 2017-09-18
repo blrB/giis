@@ -15,6 +15,7 @@ fun main(args: Array<String>) {
     window.onload = {
         init()
         initLab1()
+        initLab2()
     }
 }
 
