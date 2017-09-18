@@ -17,7 +17,9 @@ class Array4D<T>(val x: Int, val y: Int, val z: Int, val a: Int, val array: Arra
     }
 
     operator fun set(x: Int, y: Int, z: Int, a: Int, t: T) {
-        array[x][y][z][a] = t
+        if (x >= 0 && y >= 0 && z >= 0 && a >= 0 && x < this.x && y < this.y && z < this.z && a < this.a){
+            array[x][y][z][a] = t
+        }
     }
 
     inline fun forEach(operation: (T) -> Unit) {
