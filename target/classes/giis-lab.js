@@ -138,7 +138,9 @@ this['giis-lab'] = function (_, Kotlin) {
     return this.array[x][y][z][a];
   };
   Array4D.prototype.set_6isa55$ = function (x, y, z, a, t) {
-    this.array[x][y][z][a] = t;
+    if (x >= 0 && y >= 0 && z >= 0 && a >= 0 && x < this.x && y < this.y && z < this.z && a < this.a) {
+      this.array[x][y][z][a] = t;
+    }
   };
   function Array4D$forEach$lambda$lambda$lambda$lambda(closure$operation) {
     return function (it) {
@@ -335,6 +337,7 @@ this['giis-lab'] = function (_, Kotlin) {
   function main$lambda(it) {
     init();
     initLab1();
+    initLab2();
   }
   function main(args) {
     window.onload = main$lambda;
@@ -615,6 +618,319 @@ this['giis-lab'] = function (_, Kotlin) {
       }
     }
   }
+  function initLab2$lambda(it) {
+    drawCircle('canvas');
+  }
+  function initLab2$lambda_0(it) {
+    drawEllipse('canvas');
+  }
+  function initLab2$lambda_1(it) {
+    drawHyperbola('canvas');
+  }
+  function initLab2$lambda_2(it) {
+    drawParabola('canvas');
+  }
+  function initLab2() {
+    var tmp$, tmp$_0, tmp$_1, tmp$_2;
+    console.log('Init lab 2');
+    var buttonCircle = Kotlin.isType(tmp$ = document.getElementById('circle'), HTMLButtonElement) ? tmp$ : Kotlin.throwCCE();
+    buttonCircle.onclick = initLab2$lambda;
+    console.log('Init buttonCircle');
+    var buttonEllipse = Kotlin.isType(tmp$_0 = document.getElementById('ellipse'), HTMLButtonElement) ? tmp$_0 : Kotlin.throwCCE();
+    buttonEllipse.onclick = initLab2$lambda_0;
+    console.log('Init buttonEllipse');
+    var buttonHyperbola = Kotlin.isType(tmp$_1 = document.getElementById('hyperbola'), HTMLButtonElement) ? tmp$_1 : Kotlin.throwCCE();
+    buttonHyperbola.onclick = initLab2$lambda_1;
+    console.log('Init buttonHyperbola');
+    var buttonParabola = Kotlin.isType(tmp$_2 = document.getElementById('parabola'), HTMLButtonElement) ? tmp$_2 : Kotlin.throwCCE();
+    buttonParabola.onclick = initLab2$lambda_2;
+    console.log('Init buttonParabola');
+  }
+  function drawCircle$lambda(closure$canvas, closure$points) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === 2) {
+        var radius = calcRadius(closure$points.get_za3lpa$(0), closure$points.get_za3lpa$(1));
+        drawCircleAlgorithm(closure$points.get_za3lpa$(0), radius, closure$canvas);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawCircle(elementId) {
+    var tmp$;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    canvas.onclick = drawCircle$lambda(canvas, points);
+  }
+  function drawEllipse$lambda(closure$canvas, closure$points) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === 3) {
+        var a = abs(Math, closure$points.get_za3lpa$(0).x - closure$points.get_za3lpa$(1).x | 0) | 0;
+        var b = abs(Math, closure$points.get_za3lpa$(0).y - closure$points.get_za3lpa$(2).y | 0) | 0;
+        drawEllipseAlgorithm(closure$points.get_za3lpa$(0), a, b, closure$canvas);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawEllipse(elementId) {
+    var tmp$;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    canvas.onclick = drawEllipse$lambda(canvas, points);
+  }
+  function drawHyperbola$lambda(closure$canvas, closure$points) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === 3) {
+        var a = abs(Math, closure$points.get_za3lpa$(0).x - closure$points.get_za3lpa$(1).x | 0) | 0;
+        var b = abs(Math, closure$points.get_za3lpa$(0).y - closure$points.get_za3lpa$(2).y | 0) | 0;
+        drawHyperbolaAlgorithm(closure$points.get_za3lpa$(0), a, b, closure$canvas);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawHyperbola(elementId) {
+    var tmp$;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    canvas.onclick = drawHyperbola$lambda(canvas, points);
+  }
+  function drawParabola$lambda(closure$canvas, closure$points) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === 2) {
+        var a = abs(Math, closure$points.get_za3lpa$(0).y - closure$points.get_za3lpa$(1).y | 0) | 0;
+        drawParabolaAlgorithm(closure$points.get_za3lpa$(0), a, closure$canvas);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawParabola(elementId) {
+    var tmp$;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    canvas.onclick = drawParabola$lambda(canvas, points);
+  }
+  function calcRadius(p1, p2) {
+    var tmp$ = p1;
+    var x1 = tmp$.component1()
+    , y1 = tmp$.component2();
+    var tmp$_0 = p2;
+    var x2 = tmp$_0.component1()
+    , y2 = tmp$_0.component2();
+    var max = Math.max(abs(Math, x2 - x1 | 0), abs(Math, y2 - y1 | 0));
+    var min = Math.min(abs(Math, x2 - x1 | 0), abs(Math, y2 - y1 | 0));
+    return Math.sqrt(Math.pow(max, 2.0) + Math.pow(min, 2.0)) | 0;
+  }
+  function waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+    drawPixel(context, x + center.x | 0, y + center.y | 0);
+    drawPixel(context, -x + center.x | 0, -y + center.y | 0);
+    drawPixel(context, x + center.x | 0, -y + center.y | 0);
+    drawPixel(context, -x + center.x | 0, y + center.y | 0);
+    console.log('Step ' + i + ': delta(i): ' + deltaOld + '; d:' + d + '; d*:' + dz + '; pixel:' + String.fromCharCode(Kotlin.unboxChar(pixel)) + '; x:' + (x + center.x | 0) + '; y:' + (y + center.y | 0) + '; delta(i+1):' + delta + ' Plot(' + (x + center.x | 0) + ',' + (y + center.y | 0) + ')');
+  }
+  function waitDrawEllipse(context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+    waitDrawCircle(context, center, i, deltaOld, d, dz, Kotlin.unboxChar(pixel), x, y, delta);
+  }
+  function waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+    waitDrawCircle(context, center, i, deltaOld, d, dz, Kotlin.unboxChar(pixel), x, y, delta);
+  }
+  function waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+    drawPixel(context, x + center.x | 0, y + center.y | 0);
+    drawPixel(context, -x + center.x | 0, y + center.y | 0);
+    console.log('Step ' + i + ': delta(i): ' + deltaOld + '; d:' + d + '; d*:' + dz + '; pixel:' + String.fromCharCode(Kotlin.unboxChar(pixel)) + '; x:' + (x + center.x | 0) + '; y:' + (y + center.y | 0) + '; delta(i+1):' + delta + ' Plot(' + (x + center.x | 0) + ',' + (y + center.y | 0) + ')');
+  }
+  function drawCircleAlgorithm(center, radius, canvas) {
+    var tmp$;
+    var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
+    var x = 0;
+    var y = radius;
+    console.log('Draw Circle: center - (' + (x + center.x | 0) + ';' + y + '), radius - ' + radius);
+    var limit = y - radius | 0;
+    var delta = 2 - (2 * radius | 0) | 0;
+    window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+      return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+    }), 50, context, center, 0, 0, 0, 0, Kotlin.toBoxedChar(48), x, y, delta);
+    var i = 0;
+    while (y > limit) {
+      i = i + 1 | 0;
+      var deltaOld = delta;
+      var pixel;
+      var dz = (2 * delta | 0) - (2 * x | 0) - 1 | 0;
+      if (delta > 0 && dz > 0) {
+        y = y - 1 | 0;
+        delta = delta + (1 - (2 * y | 0)) | 0;
+        pixel = 86;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      var d = (2 * delta | 0) + (2 * y | 0) - 1 | 0;
+      if (delta < 0 && d <= 0) {
+        x = x + 1 | 0;
+        delta = delta + (1 + (2 * x | 0)) | 0;
+        pixel = 72;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, d, 0, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      x = x + 1 | 0;
+      y = y - 1 | 0;
+      delta = delta + ((2 * x | 0) - (2 * y | 0) + 2) | 0;
+      pixel = 68;
+      window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+        return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+      }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+    }
+  }
+  function drawEllipseAlgorithm(center, a, b, canvas) {
+    var tmp$;
+    var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
+    var aPow2 = Math.pow(a, 2.0) | 0;
+    var bPow2 = Math.pow(b, 2.0) | 0;
+    var x = 0;
+    var y = b;
+    console.log('Draw Ellipse: center - (' + (x + center.x | 0) + ';' + y + '), a - ' + a + ', b - ' + b);
+    var limit = y - b | 0;
+    var delta = aPow2 + bPow2 - Kotlin.imul(2 * aPow2 | 0, b) | 0;
+    window.setTimeout(Kotlin.getCallableRef('waitDrawEllipse', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+      return waitDrawEllipse(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+    }), 50, context, center, 0, 0, 0, 0, Kotlin.toBoxedChar(48), x, y, delta);
+    var i = 0;
+    while (y > limit) {
+      i = i + 1 | 0;
+      var deltaOld = delta;
+      var pixel;
+      var dz = (2 * delta | 0) - Kotlin.imul(2 * x | 0, bPow2) - 1 | 0;
+      if (delta > 0 && dz > 0) {
+        y = y - 1 | 0;
+        delta = delta + (aPow2 - Kotlin.imul(2 * y | 0, aPow2)) | 0;
+        pixel = 86;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      var d = (2 * delta | 0) + Kotlin.imul(2 * y | 0, aPow2) - 1 | 0;
+      if (delta < 0 && d <= 0) {
+        x = x + 1 | 0;
+        delta = delta + (bPow2 + Kotlin.imul(2 * x | 0, bPow2)) | 0;
+        pixel = 72;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, d, 0, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      x = x + 1 | 0;
+      y = y - 1 | 0;
+      delta = delta + (Kotlin.imul(bPow2, (2 * x | 0) + 1 | 0) + Kotlin.imul(aPow2, 1 - (2 * y | 0) | 0)) | 0;
+      pixel = 68;
+      window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+        return waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+      }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+    }
+  }
+  function drawHyperbolaAlgorithm(center, b, a, canvas) {
+    var tmp$;
+    var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
+    var aPow2 = Math.pow(a, 2.0) | 0;
+    var bPow2 = Math.pow(b, 2.0) | 0;
+    var x = b;
+    var y = 0;
+    console.log('Draw Ellipse: center - (' + center.x + ';' + center.y + '), a - ' + a + ', b - ' + b);
+    var delta = bPow2 - Kotlin.imul(2 * aPow2 | 0, b) - aPow2 | 0;
+    window.setTimeout(Kotlin.getCallableRef('waitDrawEllipse', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+      return waitDrawEllipse(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+    }), 50, context, center, 0, 0, 0, 0, Kotlin.toBoxedChar(48), x, y, delta);
+    var i = 0;
+    while (i < 50) {
+      i = i + 1 | 0;
+      var deltaOld = delta;
+      var pixel;
+      var dz = (2 * delta | 0) - Kotlin.imul(Kotlin.imul(b, b), (2 * x | 0) + 1 | 0) | 0;
+      if (delta > 0 && dz > 0) {
+        x = x - 1 | 0;
+        delta = delta - (Kotlin.imul(aPow2 * 2 | 0, x) + aPow2) | 0;
+        pixel = 72;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      var d = (2 * delta | 0) + Kotlin.imul(aPow2 * 2 | 0, x) + aPow2 | 0;
+      if (delta < 0 && d <= 0) {
+        y = y + 1 | 0;
+        delta = delta + (Kotlin.imul(bPow2 * 2 | 0, y) + bPow2) | 0;
+        pixel = 86;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, d, 0, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      x = x + 1 | 0;
+      y = y + 1 | 0;
+      delta = delta + (Kotlin.imul(bPow2, (2 * y | 0) + 1 | 0) - Kotlin.imul(aPow2, (2 * x | 0) + 1 | 0)) | 0;
+      pixel = 68;
+      window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+        return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+      }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+    }
+  }
+  function drawParabolaAlgorithm(center, a, canvas) {
+    var tmp$;
+    var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
+    var x = 0;
+    var y = 0;
+    console.log('Draw Parabola: center - (' + center.x + ';' + center.y + '), a - ' + a);
+    var delta = 1 - (2 * a | 0) | 0;
+    window.setTimeout(Kotlin.getCallableRef('waitDrawParabola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+      return waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+    }), 50, context, center, 0, 0, 0, 0, Kotlin.toBoxedChar(48), x, y, delta);
+    var i = 0;
+    while (i < 50) {
+      i = i + 1 | 0;
+      var deltaOld = delta;
+      var pixel;
+      var dz = (abs(Math, delta) | 0) - (abs(Math, Kotlin.imul(x, x) - Kotlin.imul(2 * a | 0, 1 - y | 0) | 0) | 0) | 0;
+      if (delta > 0 && dz > 0) {
+        y = y - 1 | 0;
+        delta = delta - (2 * a | 0) | 0;
+        pixel = 86;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawParabola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      var d = (abs(Math, Kotlin.imul(x + 1 | 0, x + 1 | 0) + Kotlin.imul(2 * a | 0, y) | 0) | 0) - (abs(Math, delta) | 0) | 0;
+      if (delta < 0 && d <= 0) {
+        x = x + 1 | 0;
+        delta = delta + ((2 * x | 0) + 1) | 0;
+        pixel = 72;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawParabola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+          return waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+        }), 100 * i | 0, context, center, i, deltaOld, d, 0, Kotlin.toBoxedChar(pixel), x, y, delta);
+        continue;
+      }
+      x = x + 1 | 0;
+      y = y - 1 | 0;
+      delta = delta - ((2 * a | 0) + (2 * x | 0) + 1) | 0;
+      pixel = 68;
+      window.setTimeout(Kotlin.getCallableRef('waitDrawParabola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
+        return waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
+      }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
+    }
+  }
   function Coordinate(x, y) {
     this.x = x;
     this.y = y;
@@ -831,6 +1147,20 @@ this['giis-lab'] = function (_, Kotlin) {
   package$giis.drawDDA_lx35d4$ = drawDDA;
   package$giis.drawBresenham_lx35d4$ = drawBresenham;
   package$giis.drawWu_lx35d4$ = drawWu;
+  package$giis.initLab2 = initLab2;
+  package$giis.drawCircle_61zpoe$ = drawCircle;
+  package$giis.drawEllipse_61zpoe$ = drawEllipse;
+  package$giis.drawHyperbola_61zpoe$ = drawHyperbola;
+  package$giis.drawParabola_61zpoe$ = drawParabola;
+  package$giis.calcRadius_sc3ow8$ = calcRadius;
+  package$giis.waitDrawCircle_s01kkh$ = waitDrawCircle;
+  package$giis.waitDrawEllipse_s01kkh$ = waitDrawEllipse;
+  package$giis.waitDrawHyperbola_s01kkh$ = waitDrawHyperbola;
+  package$giis.waitDrawParabola_s01kkh$ = waitDrawParabola;
+  package$giis.drawCircleAlgorithm_krfmak$ = drawCircleAlgorithm;
+  package$giis.drawEllipseAlgorithm_jrt2a2$ = drawEllipseAlgorithm;
+  package$giis.drawHyperbolaAlgorithm_jrt2a2$ = drawHyperbolaAlgorithm;
+  package$giis.drawParabolaAlgorithm_krfmak$ = drawParabolaAlgorithm;
   package$giis.Coordinate = Coordinate;
   package$giis.Coordinates = Coordinates;
   package$giis.Color = Color;
