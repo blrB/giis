@@ -754,7 +754,7 @@ this['giis-lab'] = function (_, Kotlin) {
     var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
     var x = 0;
     var y = radius;
-    console.log('Draw Circle: center - (' + (x + center.x | 0) + ';' + y + '), radius - ' + radius);
+    console.log('Draw Circle: center - (' + center.x + ';' + center.y + '), radius - ' + radius);
     var limit = y - radius | 0;
     var delta = 2 - (2 * radius | 0) | 0;
     window.setTimeout(Kotlin.getCallableRef('waitDrawCircle', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
@@ -801,7 +801,7 @@ this['giis-lab'] = function (_, Kotlin) {
     var bPow2 = Math.pow(b, 2.0) | 0;
     var x = 0;
     var y = b;
-    console.log('Draw Ellipse: center - (' + (x + center.x | 0) + ';' + y + '), a - ' + a + ', b - ' + b);
+    console.log('Draw Ellipse: center - (' + center.x + ';' + center.y + '), a - ' + a + ', b - ' + b);
     var limit = y - b | 0;
     var delta = aPow2 + bPow2 - Kotlin.imul(2 * aPow2 | 0, b) | 0;
     window.setTimeout(Kotlin.getCallableRef('waitDrawEllipse', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
@@ -841,15 +841,15 @@ this['giis-lab'] = function (_, Kotlin) {
       }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
     }
   }
-  function drawHyperbolaAlgorithm(center, b, a, canvas) {
+  function drawHyperbolaAlgorithm(center, a, b, canvas) {
     var tmp$;
     var context = Kotlin.isType(tmp$ = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$ : Kotlin.throwCCE();
     var aPow2 = Math.pow(a, 2.0) | 0;
     var bPow2 = Math.pow(b, 2.0) | 0;
-    var x = b;
-    var y = 0;
-    console.log('Draw Ellipse: center - (' + center.x + ';' + center.y + '), a - ' + a + ', b - ' + b);
-    var delta = bPow2 - Kotlin.imul(2 * aPow2 | 0, b) - aPow2 | 0;
+    var x = 0;
+    var y = b;
+    console.log('Draw Hyperbola: center - (' + center.x + ';' + center.y + '), a - ' + a + ', b - ' + b);
+    var delta = aPow2 + Kotlin.imul(2 * aPow2 | 0, b) - bPow2 | 0;
     window.setTimeout(Kotlin.getCallableRef('waitDrawEllipse', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
       return waitDrawEllipse(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
     }), 50, context, center, 0, 0, 0, 0, Kotlin.toBoxedChar(48), x, y, delta);
@@ -858,20 +858,20 @@ this['giis-lab'] = function (_, Kotlin) {
       i = i + 1 | 0;
       var deltaOld = delta;
       var pixel;
-      var dz = (2 * delta | 0) - Kotlin.imul(Kotlin.imul(b, b), (2 * x | 0) + 1 | 0) | 0;
+      var dz = (2 * delta | 0) - Kotlin.imul(aPow2, (2 * y | 0) + 1 | 0) | 0;
       if (delta > 0 && dz > 0) {
-        x = x - 1 | 0;
-        delta = delta - (Kotlin.imul(aPow2 * 2 | 0, x) + aPow2) | 0;
+        x = x + 1 | 0;
+        delta = delta - (Kotlin.imul(bPow2 * 2 | 0, x) + bPow2) | 0;
         pixel = 72;
         window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
           return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
         }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
         continue;
       }
-      var d = (2 * delta | 0) + Kotlin.imul(aPow2 * 2 | 0, x) + aPow2 | 0;
+      var d = (2 * delta | 0) + Kotlin.imul(bPow2, (2 * x | 0) + 1 | 0) | 0;
       if (delta < 0 && d <= 0) {
         y = y + 1 | 0;
-        delta = delta + (Kotlin.imul(bPow2 * 2 | 0, y) + bPow2) | 0;
+        delta = delta + (Kotlin.imul(aPow2 * 2 | 0, y) + aPow2) | 0;
         pixel = 86;
         window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
           return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
@@ -880,7 +880,7 @@ this['giis-lab'] = function (_, Kotlin) {
       }
       x = x + 1 | 0;
       y = y + 1 | 0;
-      delta = delta + (Kotlin.imul(bPow2, (2 * y | 0) + 1 | 0) - Kotlin.imul(aPow2, (2 * x | 0) + 1 | 0)) | 0;
+      delta = delta + (Kotlin.imul(aPow2, (2 * y | 0) + 1 | 0) - Kotlin.imul(bPow2, (2 * x | 0) + 1 | 0)) | 0;
       pixel = 68;
       window.setTimeout(Kotlin.getCallableRef('waitDrawHyperbola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
         return waitDrawHyperbola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
@@ -902,7 +902,7 @@ this['giis-lab'] = function (_, Kotlin) {
       i = i + 1 | 0;
       var deltaOld = delta;
       var pixel;
-      var dz = (abs(Math, delta) | 0) - (abs(Math, Kotlin.imul(x, x) - Kotlin.imul(2 * a | 0, 1 - y | 0) | 0) | 0) | 0;
+      var dz = (2 * delta | 0) - (2 * x | 0) - 1 | 0;
       if (delta > 0 && dz > 0) {
         y = y - 1 | 0;
         delta = delta - (2 * a | 0) | 0;
@@ -912,7 +912,7 @@ this['giis-lab'] = function (_, Kotlin) {
         }), 100 * i | 0, context, center, i, deltaOld, 0, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
         continue;
       }
-      var d = (abs(Math, Kotlin.imul(x + 1 | 0, x + 1 | 0) + Kotlin.imul(2 * a | 0, y) | 0) | 0) - (abs(Math, delta) | 0) | 0;
+      var d = (2 * delta | 0) + (2 * a | 0) | 0;
       if (delta < 0 && d <= 0) {
         x = x + 1 | 0;
         delta = delta + ((2 * x | 0) + 1) | 0;
@@ -924,7 +924,7 @@ this['giis-lab'] = function (_, Kotlin) {
       }
       x = x + 1 | 0;
       y = y - 1 | 0;
-      delta = delta - ((2 * a | 0) + (2 * x | 0) + 1) | 0;
+      delta = delta + ((2 * x | 0) + 1 - (2 * a | 0)) | 0;
       pixel = 68;
       window.setTimeout(Kotlin.getCallableRef('waitDrawParabola', function (context, center, i, deltaOld, d, dz, pixel, x, y, delta) {
         return waitDrawParabola(context, center, i, deltaOld, d, dz, pixel, x, y, delta);
