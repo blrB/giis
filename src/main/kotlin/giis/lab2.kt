@@ -136,7 +136,7 @@ fun drawCircleAlgorithm(center: Coordinate, radius: Int, canvas: HTMLCanvasEleme
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     var x = 0
     var y = radius
-    console.log("Draw Circle: center - (${x + center.x};${y}), radius - $radius")
+    console.log("Draw Circle: center - (${center.x};${center.y}), radius - $radius")
     val limit = y - radius
     var delta = 2 - 2 * radius
     window.setTimeout(::waitDrawCircle, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
@@ -175,7 +175,7 @@ fun drawEllipseAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasE
     val bPow2 = Math.pow(b.toDouble(), 2.0).toInt()
     var x = 0
     var y = b
-    console.log("Draw Ellipse: center - (${x + center.x};${y}), a - $a, b - $b")
+    console.log("Draw Ellipse: center - (${center.x};${center.y}), a - $a, b - $b")
     val limit = y - b
     var delta = aPow2 + bPow2 - 2 * aPow2 * b
     window.setTimeout(::waitDrawEllipse, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
@@ -209,39 +209,39 @@ fun drawEllipseAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasE
 }
 
 
-fun drawHyperbolaAlgorithm(center: Coordinate, b: Int, a: Int, canvas: HTMLCanvasElement) {
+fun drawHyperbolaAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasElement) {
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     val aPow2 = Math.pow(a.toDouble(), 2.0).toInt()
     val bPow2 = Math.pow(b.toDouble(), 2.0).toInt()
-    var x = b
-    var y = 0
-    console.log("Draw Ellipse: center - (${center.x};${center.y}), a - $a, b - $b")
-    var delta = bPow2 - 2 * aPow2 * b - aPow2
+    var x = 0
+    var y = b
+    console.log("Draw Hyperbola: center - (${center.x};${center.y}), a - $a, b - $b")
+    var delta = aPow2 + 2 * aPow2 * b - bPow2
     window.setTimeout(::waitDrawEllipse, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
     var i = 0
     while (i < 50) {
         i++
         val deltaOld = delta
         var pixel : Char
-        val dz = 2 * delta - b * b * (2 * x + 1)
+        val dz = 2 * delta - aPow2 * (2 * y + 1)
         if (delta > 0 && dz > 0) {
-            x -= 1
-            delta -=  aPow2 * 2 * x + aPow2
+            x += 1
+            delta -=  bPow2 * 2 * x + bPow2
             pixel = 'H'
             window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
-        val d = 2 * delta + aPow2 * 2 * x + aPow2
+        val d = 2 * delta + bPow2 * (2 * x + 1)
         if (delta < 0 && d <= 0) {
             y += 1
-            delta += bPow2 * 2 * y + bPow2
+            delta += aPow2 * 2 * y + aPow2
             pixel = 'V'
             window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, d, 0, pixel, x, y, delta)
             continue
         }
         x += 1
         y += 1
-        delta +=  bPow2 * (2 * y + 1) - aPow2 * (2 * x + 1)
+        delta +=  aPow2 * (2 * y + 1) - bPow2 * (2 * x + 1)
         pixel = 'D'
         window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
@@ -260,7 +260,7 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
         i++
         val deltaOld = delta
         var pixel : Char
-        val dz = Math.abs(delta).toInt() - Math.abs(x * x - 2 * a * (1 - y)).toInt()
+        val dz = 2 * delta - 2 * x - 1
         if (delta > 0 && dz > 0) {
             y -= 1
             delta -= 2 * a
@@ -268,7 +268,7 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
             window.setTimeout(::waitDrawParabola, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
-        val d = Math.abs( (x + 1) * (x + 1) + 2 * a * y ).toInt() - Math.abs(delta).toInt()
+        val d = 2 * delta + 2 * a
         if (delta < 0 && d <= 0) {
             x += 1
             delta += 2 * x + 1
@@ -278,7 +278,7 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
         }
         x += 1
         y -= 1
-        delta -= 2 * a + 2 * x + 1
+        delta += 2 * x + 1 - 2 * a
         pixel = 'D'
         window.setTimeout(::waitDrawParabola, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
