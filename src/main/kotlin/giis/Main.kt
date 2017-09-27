@@ -16,6 +16,7 @@ fun main(args: Array<String>) {
         init()
         initLab1()
         initLab2()
+        initLab3()
     }
 }
 
