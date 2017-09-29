@@ -4,7 +4,432 @@ if (typeof kotlin === 'undefined') {
 this['giis-lab'] = function (_, Kotlin) {
   'use strict';
   var $$importsForInline$$ = _.$$importsForInline$$ || (_.$$importsForInline$$ = {});
+  var StringBuilder = Kotlin.kotlin.text.StringBuilder;
+  var MutableList = Kotlin.kotlin.collections.MutableList;
+  var asList = Kotlin.kotlin.collections.asList_us0mfu$;
+  var toMutableList = Kotlin.kotlin.collections.toMutableList_us0mfu$;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
+  var IllegalArgumentException = Kotlin.kotlin.IllegalArgumentException;
   var toDouble = Kotlin.kotlin.text.toDouble_pdl1vz$;
+  var toInt = Kotlin.kotlin.text.toInt_pdl1vz$;
+  TransposedMatrix.prototype = Object.create(AbstractMatrix.prototype);
+  TransposedMatrix.prototype.constructor = TransposedMatrix;
+  TransposedMutableMatrix.prototype = Object.create(TransposedMatrix.prototype);
+  TransposedMutableMatrix.prototype.constructor = TransposedMutableMatrix;
+  ListMatrix.prototype = Object.create(AbstractMatrix.prototype);
+  ListMatrix.prototype.constructor = ListMatrix;
+  MutableListMatrix.prototype = Object.create(ListMatrix.prototype);
+  MutableListMatrix.prototype.constructor = MutableListMatrix;
+  function Matrix() {
+  }
+  Matrix.$metadata$ = {
+    kind: Kotlin.Kind.INTERFACE,
+    simpleName: 'Matrix',
+    interfaces: []
+  };
+  function get_size($receiver) {
+    return Kotlin.imul($receiver.cols, $receiver.rows);
+  }
+  function MutableMatrix() {
+  }
+  MutableMatrix.$metadata$ = {
+    kind: Kotlin.Kind.INTERFACE,
+    simpleName: 'MutableMatrix',
+    interfaces: [Matrix]
+  };
+  function AbstractMatrix() {
+  }
+  AbstractMatrix.prototype.toString = function () {
+    var sb = new StringBuilder();
+    sb.append_s8itvh$(91);
+    var tmp$, tmp$_0;
+    tmp$ = this.rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = this.cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        var value = this.get_vux9f0$(x, y);
+        if (x === 0)
+          sb.append_s8itvh$(91);
+        sb.append_gw00v9$(Kotlin.toString(value));
+        if (x === (this.cols - 1 | 0)) {
+          sb.append_s8itvh$(93);
+          if (y < (this.rows - 1 | 0))
+            sb.append_gw00v9$(', ');
+        }
+         else {
+          sb.append_gw00v9$(', ');
+        }
+      }
+    }
+    sb.append_s8itvh$(93);
+    return sb.toString();
+  };
+  AbstractMatrix.prototype.equals = function (other) {
+    if (!Kotlin.isType(other, Matrix))
+      return false;
+    if (this.rows !== other.rows || this.cols !== other.cols)
+      return false;
+    var eq = {v: true};
+    var tmp$, tmp$_0;
+    tmp$ = this.rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = this.cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        var value = this.get_vux9f0$(x, y);
+        if (value === null) {
+          if (other.get_vux9f0$(x, y) !== null) {
+            eq.v = false;
+          }
+        }
+         else {
+          if (!Kotlin.equals(value, other.get_vux9f0$(x, y))) {
+            eq.v = false;
+          }
+        }
+      }
+    }
+    return eq.v;
+  };
+  AbstractMatrix.prototype.hashCode = function () {
+    var h = {v: 17};
+    h.v = (h.v * 39 | 0) + this.cols | 0;
+    h.v = (h.v * 39 | 0) + this.rows | 0;
+    var tmp$, tmp$_0;
+    tmp$ = this.rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = this.cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        var it = this.get_vux9f0$(x, y);
+        var tmp$_1;
+        h.v = (h.v * 37 | 0) + ((tmp$_1 = it != null ? Kotlin.hashCode(it) : null) != null ? tmp$_1 : 1) | 0;
+      }
+    }
+    return h.v;
+  };
+  AbstractMatrix.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'AbstractMatrix',
+    interfaces: [Matrix]
+  };
+  function TransposedMatrix(original) {
+    AbstractMatrix.call(this);
+    this.original_0 = original;
+  }
+  Object.defineProperty(TransposedMatrix.prototype, 'cols', {
+    get: function () {
+      return this.original_0.rows;
+    }
+  });
+  Object.defineProperty(TransposedMatrix.prototype, 'rows', {
+    get: function () {
+      return this.original_0.cols;
+    }
+  });
+  TransposedMatrix.prototype.get_vux9f0$ = function (x, y) {
+    return this.original_0.get_vux9f0$(y, x);
+  };
+  TransposedMatrix.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'TransposedMatrix',
+    interfaces: [AbstractMatrix]
+  };
+  function TransposedMutableMatrix(original) {
+    TransposedMatrix.call(this, original);
+  }
+  TransposedMutableMatrix.prototype.set_vq7693$ = function (x, y, value) {
+    var tmp$;
+    (Kotlin.isType(tmp$ = this.original_0, MutableMatrix) ? tmp$ : Kotlin.throwCCE()).set_vq7693$(y, x, value);
+  };
+  TransposedMutableMatrix.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'TransposedMutableMatrix',
+    interfaces: [MutableMatrix, TransposedMatrix]
+  };
+  function asTransposed($receiver) {
+    return new TransposedMatrix($receiver);
+  }
+  function asTransposed_0($receiver) {
+    return new TransposedMutableMatrix($receiver);
+  }
+  function ListMatrix(cols, rows, list) {
+    AbstractMatrix.call(this);
+    this.cols_dx86ic$_0 = cols;
+    this.rows_dx86ic$_0 = rows;
+    this.list_0 = list;
+  }
+  Object.defineProperty(ListMatrix.prototype, 'cols', {
+    get: function () {
+      return this.cols_dx86ic$_0;
+    }
+  });
+  Object.defineProperty(ListMatrix.prototype, 'rows', {
+    get: function () {
+      return this.rows_dx86ic$_0;
+    }
+  });
+  ListMatrix.prototype.get_vux9f0$ = function (x, y) {
+    return this.list_0.get_za3lpa$(Kotlin.imul(y, this.cols) + x | 0);
+  };
+  ListMatrix.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'ListMatrix',
+    interfaces: [AbstractMatrix]
+  };
+  function MutableListMatrix(cols, rows, list) {
+    ListMatrix.call(this, cols, rows, list);
+  }
+  MutableListMatrix.prototype.set_vq7693$ = function (x, y, value) {
+    var tmp$;
+    (Kotlin.isType(tmp$ = this.list_0, MutableList) ? tmp$ : Kotlin.throwCCE()).set_wxm5ur$(Kotlin.imul(y, this.cols) + x | 0, value);
+  };
+  MutableListMatrix.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'MutableListMatrix',
+    interfaces: [MutableMatrix, ListMatrix]
+  };
+  function matrixOf(cols, rows, elements) {
+    return new ListMatrix(cols, rows, asList(elements));
+  }
+  function mutableMatrixOf(cols, rows, elements) {
+    return new MutableListMatrix(cols, rows, toMutableList(elements));
+  }
+  function prepareListForMatrix(cols, rows, init) {
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(init(x, y));
+      }
+    }
+    return list;
+  }
+  var createMatrix = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.createMatrix_6qkxfg$', function (cols, rows, init) {
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(init(x, y));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  });
+  var createMutableMatrix = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.createMutableMatrix_6qkxfg$', function (cols, rows, init) {
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(init(x, y));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.MutableListMatrix(cols, rows, list);
+  });
+  function mapIndexed$lambda(closure$transform, this$mapIndexed) {
+    return function (x, y) {
+      return closure$transform(x, y, this$mapIndexed.get_vux9f0$(x, y));
+    };
+  }
+  var mapIndexed = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.mapIndexed_hacaqk$', function ($receiver, transform) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(transform(x, y, $receiver.get_vux9f0$(x, y)));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  });
+  function map$lambda(closure$transform) {
+    return function (x, y, value) {
+      return closure$transform(value);
+    };
+  }
+  var map = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.map_taft24$', function ($receiver, transform) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(transform($receiver.get_vux9f0$(x, y)));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  });
+  var forEachIndexed = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.forEachIndexed_x3un2v$', function ($receiver, action) {
+    var tmp$, tmp$_0;
+    tmp$ = $receiver.rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = $receiver.cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        action(x, y, $receiver.get_vux9f0$(x, y));
+      }
+    }
+  });
+  function forEach$lambda(closure$action) {
+    return function (x, y, value) {
+      closure$action(value);
+    };
+  }
+  var forEach = Kotlin.defineInlineFunction('giis-lab.com.ichipsea.kotlin.matrix.forEach_akez33$', function ($receiver, action) {
+    var tmp$, tmp$_0;
+    tmp$ = $receiver.rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = $receiver.cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        action($receiver.get_vux9f0$(x, y));
+      }
+    }
+  });
+  function toList($receiver) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$($receiver.get_vux9f0$(x, y));
+      }
+    }
+    return list;
+  }
+  function toMutableList_0($receiver) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$($receiver.get_vux9f0$(x, y));
+      }
+    }
+    return list;
+  }
+  function toArrayList($receiver, size) {
+    var tmp$;
+    var list = ArrayList_init(size);
+    var itr = $receiver.iterator();
+    tmp$ = size - 1 | 0;
+    for (var i = 0; i <= tmp$; i++) {
+      if (itr.hasNext()) {
+        list.add_11rb$(itr.next());
+      }
+       else {
+        throw new IllegalArgumentException('No enough elements');
+      }
+    }
+    return list;
+  }
+  function toMatrix($receiver, cols, rows) {
+    var list = toArrayList($receiver, Kotlin.imul(cols, rows));
+    return new ListMatrix(cols, rows, list);
+  }
+  function toMutableMatrix($receiver, cols, rows) {
+    var list = toArrayList($receiver, Kotlin.imul(cols, rows));
+    return new MutableListMatrix(cols, rows, list);
+  }
+  function plus($receiver, other) {
+    if ($receiver.rows !== other.rows || $receiver.cols !== other.cols)
+      throw new IllegalArgumentException('Matrices not match');
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(Kotlin.numberToDouble($receiver.get_vux9f0$(x, y)) + Kotlin.numberToDouble(other.get_vux9f0$(x, y)));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  }
+  function unaryMinus($receiver) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(-Kotlin.numberToDouble($receiver.get_vux9f0$(x, y)));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  }
+  function minus($receiver, other) {
+    return plus($receiver, unaryMinus(other));
+  }
+  function times($receiver, other) {
+    if ($receiver.rows !== other.rows || $receiver.cols !== other.cols)
+      throw new IllegalArgumentException('Matrices not match');
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(Kotlin.numberToDouble($receiver.get_vux9f0$(x, y)) * Kotlin.numberToDouble(other.get_vux9f0$(x, y)));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  }
+  function times_0($receiver, other) {
+    var cols = $receiver.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        list.add_11rb$(Kotlin.numberToDouble($receiver.get_vux9f0$(x, y)) * Kotlin.numberToDouble(other));
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  }
+  function times_1($receiver, other) {
+    return times_0(other, $receiver);
+  }
+  function x($receiver, other) {
+    if (other.rows !== $receiver.cols)
+      throw new IllegalArgumentException('Matrices not match');
+    var cols = other.cols;
+    var rows = $receiver.rows;
+    var tmp$, tmp$_0;
+    var list = ArrayList_init(Kotlin.imul(cols, rows));
+    tmp$ = rows - 1 | 0;
+    for (var y = 0; y <= tmp$; y++) {
+      tmp$_0 = cols - 1 | 0;
+      for (var x = 0; x <= tmp$_0; x++) {
+        var tmp$_1;
+        var value = 0.0;
+        tmp$_1 = other.rows - 1 | 0;
+        for (var i = 0; i <= tmp$_1; i++)
+          value += Kotlin.numberToDouble(other.get_vux9f0$(x, i)) * Kotlin.numberToDouble($receiver.get_vux9f0$(i, y));
+        list.add_11rb$(value);
+      }
+    }
+    return new _.com.ichipsea.kotlin.matrix.ListMatrix(cols, rows, list);
+  }
   function Array4D(x, y, z, a, array) {
     Array4D$Companion_getInstance();
     this.x = x;
@@ -338,6 +763,7 @@ this['giis-lab'] = function (_, Kotlin) {
     init();
     initLab1();
     initLab2();
+    initLab3();
   }
   function main(args) {
     window.onload = main$lambda;
@@ -931,6 +1357,153 @@ this['giis-lab'] = function (_, Kotlin) {
       }), 100 * i | 0, context, center, i, deltaOld, d, dz, Kotlin.toBoxedChar(pixel), x, y, delta);
     }
   }
+  function initLab3$lambda(it) {
+    drawCurves('canvas', Kotlin.getCallableRef('drawHermite', function (points, context) {
+      return drawHermite(points, context);
+    }));
+  }
+  function initLab3$lambda_0(it) {
+    drawCurves('canvas', Kotlin.getCallableRef('drawBezier', function (points, context) {
+      return drawBezier(points, context);
+    }));
+  }
+  function initLab3$lambda_1(it) {
+    drawCurvesPointsN('canvas', Kotlin.getCallableRef('drawBSpline', function (points, context) {
+      return drawBSpline(points, context);
+    }));
+  }
+  function initLab3() {
+    var tmp$, tmp$_0, tmp$_1;
+    console.log('Init lab 3');
+    var buttonHermite = Kotlin.isType(tmp$ = document.getElementById('hermite'), HTMLButtonElement) ? tmp$ : Kotlin.throwCCE();
+    buttonHermite.onclick = initLab3$lambda;
+    console.log('Init buttonHermite');
+    var buttonBezier = Kotlin.isType(tmp$_0 = document.getElementById('bezier'), HTMLButtonElement) ? tmp$_0 : Kotlin.throwCCE();
+    buttonBezier.onclick = initLab3$lambda_0;
+    console.log('Init buttonBezier');
+    var buttonBSpline = Kotlin.isType(tmp$_1 = document.getElementById('b-spline'), HTMLButtonElement) ? tmp$_1 : Kotlin.throwCCE();
+    buttonBSpline.onclick = initLab3$lambda_1;
+    console.log('Init buttonBSpline');
+  }
+  function waitDrawCurves(context, t, x, y) {
+    drawPixel(context, Kotlin.numberToInt(x), Kotlin.numberToInt(y));
+    console.log('t: ' + t + '; x(t): ' + x + '; y(t): ' + y);
+  }
+  function waitDrawBSpline(context, i, t, x, y) {
+    drawPixel(context, Kotlin.numberToInt(x), Kotlin.numberToInt(y));
+    console.log('i: ' + i + '; t: ' + t + '; x(t): ' + x + '; y(t): ' + y);
+  }
+  function drawCurves$lambda(closure$canvas, closure$points, closure$drawAlgorithm, closure$context) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === 4) {
+        closure$drawAlgorithm(closure$points, closure$context);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawCurves(elementId, drawAlgorithm) {
+    var tmp$, tmp$_0;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var context = Kotlin.isType(tmp$_0 = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    canvas.onclick = drawCurves$lambda(canvas, points, drawAlgorithm, context);
+  }
+  function drawCurvesPointsN$lambda(closure$canvas, closure$points, closure$size, closure$drawAlgorithm, closure$context) {
+    return function (it) {
+      var pos = getMousePosOnCanvas(closure$canvas, it);
+      closure$points.add_11rb$(pos);
+      if (closure$points.size === closure$size) {
+        closure$drawAlgorithm(closure$points, closure$context);
+        closure$points.clear();
+        closure$canvas.onclick = null;
+      }
+    };
+  }
+  function drawCurvesPointsN(elementId, drawAlgorithm) {
+    var tmp$, tmp$_0, tmp$_1;
+    var canvas = Kotlin.isType(tmp$ = document.getElementById(elementId), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+    var context = Kotlin.isType(tmp$_0 = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE();
+    var points = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    var sizeInput = Kotlin.isType(tmp$_1 = document.getElementById('points-number'), HTMLInputElement) ? tmp$_1 : Kotlin.throwCCE();
+    var size = toInt(sizeInput.value);
+    canvas.onclick = drawCurvesPointsN$lambda(canvas, points, size, drawAlgorithm, context);
+  }
+  function drawHermite(points, context) {
+    var p1 = points.get_za3lpa$(0);
+    var p2 = points.get_za3lpa$(1);
+    var p3 = points.get_za3lpa$(2);
+    var p4 = points.get_za3lpa$(3);
+    console.log('Draw Hermite');
+    var i = 0;
+    var t = 0.0;
+    var step = 0.01;
+    var a = matrixOf(4, 4, [2, -2, 1, 1, -3, 3, -2, -1, 0, 0, 1, 0, 1, 0, 0, 0]);
+    var b = matrixOf(2, 4, [p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y]);
+    var c = x(a, b);
+    while (t <= 1) {
+      var tMatrix = matrixOf(4, 1, [t * t * t, t * t, t, 1]);
+      var r = x(tMatrix, c);
+      var x_0 = r.get_vux9f0$(0, 0);
+      var y = r.get_vux9f0$(1, 0);
+      window.setTimeout(Kotlin.getCallableRef('waitDrawCurves', function (context, t, x, y) {
+        return waitDrawCurves(context, t, x, y);
+      }), 10 * i | 0, context, t, x_0 | 0, y | 0);
+      t += step;
+      i = i + 1 | 0;
+    }
+  }
+  function drawBezier(points, context) {
+    var p1 = points.get_za3lpa$(0);
+    var p2 = points.get_za3lpa$(1);
+    var p3 = points.get_za3lpa$(2);
+    var p4 = points.get_za3lpa$(3);
+    console.log('Draw Bezier');
+    var i = 0;
+    var t = 0.0;
+    var step = 0.005;
+    var a = matrixOf(4, 4, [-1, 3, -3, 1, 3, -6, 3, 0, -3, 3, 0, 0, 1, 0, 0, 0]);
+    var b = matrixOf(2, 4, [p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y]);
+    var c = x(a, b);
+    while (t <= 1) {
+      var tMatrix = matrixOf(4, 1, [t * t * t, t * t, t, 1]);
+      var r = x(tMatrix, c);
+      var x_0 = r.get_vux9f0$(0, 0);
+      var y = r.get_vux9f0$(1, 0);
+      window.setTimeout(Kotlin.getCallableRef('waitDrawCurves', function (context, t, x, y) {
+        return waitDrawCurves(context, t, x, y);
+      }), 10 * i | 0, context, t, x_0 | 0, y | 0);
+      t += step;
+      i = i + 1 | 0;
+    }
+  }
+  function drawBSpline(points, context) {
+    var n = points.size;
+    console.log('Draw B-spline');
+    var k = 0;
+    var step = 0.01;
+    var a = matrixOf(4, 4, [-1, 3, -3, 1, 3, -6, 3, 0, -3, 0, 3, 0, 1, 4, 1, 0]);
+    var i = 1;
+    while (i <= (n - 3 | 0)) {
+      var b = matrixOf(2, 4, [points.get_za3lpa$(i - 1 | 0).x, points.get_za3lpa$(i - 1 | 0).y, points.get_za3lpa$(i).x, points.get_za3lpa$(i).y, points.get_za3lpa$(i + 1 | 0).x, points.get_za3lpa$(i + 1 | 0).y, points.get_za3lpa$(i + 2 | 0).x, points.get_za3lpa$(i + 2 | 0).y]);
+      var c = x(a, b);
+      var t = 0.0;
+      while (t <= 1) {
+        var tMatrix = matrixOf(4, 1, [t * t * t, t * t, t, 1]);
+        var r = x(tMatrix, c);
+        var x_0 = r.get_vux9f0$(0, 0) / 6;
+        var y = r.get_vux9f0$(1, 0) / 6;
+        window.setTimeout(Kotlin.getCallableRef('waitDrawBSpline', function (context, i, t, x, y) {
+          return waitDrawBSpline(context, i, t, x, y);
+        }), 10 * k | 0, context, i, t, x_0 | 0, y | 0);
+        t += step;
+        k = k + 1 | 0;
+      }
+      i = i + 1 | 0;
+    }
+  }
   function Coordinate(x, y) {
     this.x = x;
     this.y = y;
@@ -1113,6 +1686,44 @@ this['giis-lab'] = function (_, Kotlin) {
     var y = evt.clientY - rect.top;
     return new Coordinate(x / Scene_getInstance().scale | 0, y / Scene_getInstance().scale | 0);
   }
+  var package$com = _.com || (_.com = {});
+  var package$ichipsea = package$com.ichipsea || (package$com.ichipsea = {});
+  var package$kotlin = package$ichipsea.kotlin || (package$ichipsea.kotlin = {});
+  var package$matrix = package$kotlin.matrix || (package$kotlin.matrix = {});
+  package$matrix.Matrix = Matrix;
+  package$matrix.get_size_fywbi8$ = get_size;
+  package$matrix.MutableMatrix = MutableMatrix;
+  $$importsForInline$$['giis-lab'] = _;
+  package$matrix.AbstractMatrix = AbstractMatrix;
+  package$matrix.TransposedMatrix = TransposedMatrix;
+  package$matrix.TransposedMutableMatrix = TransposedMutableMatrix;
+  package$matrix.asTransposed_g0cbpy$ = asTransposed;
+  package$matrix.asTransposed_4f3t2d$ = asTransposed_0;
+  package$matrix.ListMatrix = ListMatrix;
+  package$matrix.MutableListMatrix = MutableListMatrix;
+  package$matrix.matrixOf_xv94kn$ = matrixOf;
+  package$matrix.mutableMatrixOf_xv94kn$ = mutableMatrixOf;
+  package$matrix.prepareListForMatrix_0 = prepareListForMatrix;
+  package$matrix.createMatrix_6qkxfg$ = createMatrix;
+  package$matrix.createMutableMatrix_6qkxfg$ = createMutableMatrix;
+  package$matrix.mapIndexed$f = mapIndexed$lambda;
+  package$matrix.mapIndexed_hacaqk$ = mapIndexed;
+  package$matrix.map$f = map$lambda;
+  package$matrix.map_taft24$ = map;
+  package$matrix.forEachIndexed_x3un2v$ = forEachIndexed;
+  package$matrix.forEach$f = forEach$lambda;
+  package$matrix.forEach_akez33$ = forEach;
+  package$matrix.toList_g0cbpy$ = toList;
+  package$matrix.toMutableList_g0cbpy$ = toMutableList_0;
+  package$matrix.toMatrix_5pauu2$ = toMatrix;
+  package$matrix.toMutableMatrix_5pauu2$ = toMutableMatrix;
+  package$matrix.plus_oond31$ = plus;
+  package$matrix.unaryMinus_lbyvke$ = unaryMinus;
+  package$matrix.minus_oond31$ = minus;
+  package$matrix.times_oond31$ = times;
+  package$matrix.times_t56byw$ = times_0;
+  package$matrix.times_shudpk$ = times_1;
+  package$matrix.x_oond31$ = x;
   Array4D$Companion.prototype.invoke$f$f$f = Array4D$Companion$invoke$lambda$lambda$lambda;
   Array4D$Companion.prototype.invoke$f$f = Array4D$Companion$invoke$lambda$lambda;
   Array4D$Companion.prototype.invoke$f = Array4D$Companion$invoke$lambda;
@@ -1132,7 +1743,6 @@ this['giis-lab'] = function (_, Kotlin) {
   Array4D.forEachIndexed$f = Array4D$forEachIndexed$lambda;
   var package$giis = _.giis || (_.giis = {});
   package$giis.Array4D = Array4D;
-  $$importsForInline$$['giis-lab'] = _;
   Object.defineProperty(package$giis, 'Scene', {
     get: Scene_getInstance
   });
@@ -1161,6 +1771,14 @@ this['giis-lab'] = function (_, Kotlin) {
   package$giis.drawEllipseAlgorithm_jrt2a2$ = drawEllipseAlgorithm;
   package$giis.drawHyperbolaAlgorithm_jrt2a2$ = drawHyperbolaAlgorithm;
   package$giis.drawParabolaAlgorithm_krfmak$ = drawParabolaAlgorithm;
+  package$giis.initLab3 = initLab3;
+  package$giis.waitDrawCurves_u8ceq0$ = waitDrawCurves;
+  package$giis.waitDrawBSpline_ah1w02$ = waitDrawBSpline;
+  package$giis.drawCurves_6wvp7q$ = drawCurves;
+  package$giis.drawCurvesPointsN_6wvp7q$ = drawCurvesPointsN;
+  package$giis.drawHermite_1ee4u1$ = drawHermite;
+  package$giis.drawBezier_1ee4u1$ = drawBezier;
+  package$giis.drawBSpline_1ee4u1$ = drawBSpline;
   package$giis.Coordinate = Coordinate;
   package$giis.Coordinates = Coordinates;
   package$giis.Color = Color;
