@@ -96,9 +96,9 @@ fun drawHermite(points: ArrayList<Coordinate>, context: CanvasRenderingContext2D
 
     val b = matrixOf(2, 4,
             p1.x, p1.y,
-            p2.x, p2.y,
-            p3.x, p3.y,
-            p4.x, p4.y
+            p4.x, p4.y,
+            p3.x - p1.x, p3.y - p1.y,
+            p4.x - p2.x, p4.y - p2.y
     )
 
     val c: Matrix<Number> = a x b
