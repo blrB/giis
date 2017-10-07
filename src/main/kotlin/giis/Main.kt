@@ -29,6 +29,7 @@ fun changeScale(link: HTMLElement, canvas: HTMLCanvasElement, context: CanvasRen
     canvas.height = (Scene.size * Scene.scale).toInt()
     context.scale(Scene.scale, Scene.scale)
     context.render()
+    Scene.object3D?.draw(canvas)
 }
 
 fun init() {

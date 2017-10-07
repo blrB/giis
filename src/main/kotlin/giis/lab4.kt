@@ -41,6 +41,18 @@ fun initLab4() {
     }
     console.log("Init buttonScaling")
 
+    val buttonReflection = document.getElementById("reflection") as HTMLButtonElement
+    buttonReflection.onclick = {
+        transformationReflection(canvas)
+    }
+    console.log("Init buttonReflection")
+
+    val buttonPerspective = document.getElementById("perspective") as HTMLButtonElement
+    buttonPerspective.onclick = {
+        transformationPerspective(canvas)
+    }
+    console.log("Init buttonPerspective")
+
 
 }
 
@@ -180,6 +192,92 @@ fun transformationScaling(canvas: HTMLCanvasElement){
             }
         }
         val result: Matrix<Number> = p x s
+        result.forEachIndexed { x, y, value ->
+            when(x){
+                0 -> points?.get(y)?.x = value.toDouble()
+                1 -> points?.get(y)?.y = value.toDouble()
+                2 -> points?.get(y)?.z = value.toDouble()
+                3 -> points?.get(y)?.w = value.toDouble()
+                else -> {
+                    console.log("Error set p[$x,$y]")
+                }
+            }
+        }
+        Scene.object3D?.draw(canvas)
+    }
+}
+
+fun transformationReflection(canvas: HTMLCanvasElement){
+    Scene.object3D?.let {
+        val rx = if (getAxisNumber("x") == 0) 1 else -1
+        val ry = if (getAxisNumber("y") == 0) 1 else -1
+        val rz = if (getAxisNumber("z") == 0) 1 else -1
+
+        val r = matrixOf(4, 4,
+                rx, 0, 0, 0,
+                0, ry, 0, 0,
+                0, 0, rz, 0,
+                0, 0, 0, 1
+        )
+
+        val points = Scene.object3D?.points
+        val pointSize = Scene.object3D?.points?.size
+        val p = createMatrix(4, pointSize!!) { x, y ->
+            when(x){
+                0 -> points!![y].x
+                1 -> points!![y].y
+                2 -> points!![y].z
+                3 -> points!![y].w
+                else -> {
+                    console.log("Error get p[$x,$y]")
+                    0.0
+                }
+            }
+        }
+        val result: Matrix<Number> = p x r
+        result.forEachIndexed { x, y, value ->
+            when(x){
+                0 -> points?.get(y)?.x = value.toDouble()
+                1 -> points?.get(y)?.y = value.toDouble()
+                2 -> points?.get(y)?.z = value.toDouble()
+                3 -> points?.get(y)?.w = value.toDouble()
+                else -> {
+                    console.log("Error set p[$x,$y]")
+                }
+            }
+        }
+        Scene.object3D?.draw(canvas)
+    }
+}
+
+fun transformationPerspective(canvas: HTMLCanvasElement){
+    Scene.object3D?.let {
+        val oneOndx = if (getAxisNumber("x") == 0) .0 else 1.0 / getAxisNumber("x")
+        val oneOndy = if (getAxisNumber("y") == 0) .0 else 1.0 / getAxisNumber("y")
+        val oneOndz = if (getAxisNumber("z") == 0) .0 else 1.0 / getAxisNumber("z")
+
+        val r = matrixOf(4, 4,
+            1.0, 0.0, 0.0, oneOndy,
+            0.0, 1.0, 0.0, oneOndx,
+            0.0, 0.0, 1.0, oneOndz,
+            0.0, 0.0, 0.0, 0.0
+        )
+
+        val points = Scene.object3D?.points
+        val pointSize = Scene.object3D?.points?.size
+        val p = createMatrix(4, pointSize!!) { x, y ->
+            when(x){
+                0 -> points!![y].x
+                1 -> points!![y].y
+                2 -> points!![y].z
+                3 -> points!![y].w
+                else -> {
+                    console.log("Error get p[$x,$y]")
+                    0.0
+                }
+            }
+        }
+        val result: Matrix<Number> = p x r
         result.forEachIndexed { x, y, value ->
             when(x){
                 0 -> points?.get(y)?.x = value.toDouble()
