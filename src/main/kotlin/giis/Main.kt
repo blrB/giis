@@ -1,5 +1,6 @@
 package giis
 
+import giis.object3d.Object3D
 import org.w3c.dom.*
 import kotlin.browser.document
 import kotlin.browser.window
@@ -8,6 +9,7 @@ object Scene {
     var scale = 8.0
     var size = 75
     var array = Array4D<Color>(size, size, 1, 1)
+    var object3D : Object3D? = null
 }
 
 
@@ -17,6 +19,7 @@ fun main(args: Array<String>) {
         initLab1()
         initLab2()
         initLab3()
+        initLab4()
     }
 }
 

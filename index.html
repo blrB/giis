@@ -55,6 +55,27 @@
             </div>
             <input id="points-number" min="4" max="16" type="number" value="4" style="width: 50px">
         </div>
+        <div id="3d-transformation">
+            <h1>Transformation</h1>
+            <div>
+                <span>x</span>
+                <input id="number-x" min="-359" max="359" type="number" value="0" style="width: 50px">
+                <span>y</span>
+                <input id="number-y" min="-359" max="359" type="number" value="0" style="width: 50px">
+                <span>z</span>
+                <input id="number-z" min="-359" max="359" type="number" value="0" style="width: 50px">
+            </div>
+            <div class="btn-group" >
+                <button id="moving" type="button" class="btn btn-primary">Moving</button>
+                <button id="rotating" type="button" class="btn btn-primary">Rotating</button>
+                <button id="scaling" type="button" class="btn btn-primary">Scaling</button>
+            </div>
+            <div class="btn-group" >
+                <button id="identity" type="button" class="btn btn-primary">Identity</button>
+                <button id="perspective" type="button" class="btn btn-primary">Perspective</button>
+            </div>
+            <input id="file" name="file" type="file" accept=".json">
+        </div>
     </div>
     <div class="col-sm-8">
         <canvas class="center-block" id="canvas"></canvas>
