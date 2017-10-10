@@ -1,15 +1,16 @@
 package giis
 
 import com.ichipsea.kotlin.matrix.*
-import giis.object3d.Coordinate4D
-import giis.object3d.Cube
-import giis.object3d.Object3dJSON
+import giis.object3d.*
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
 import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.js.Math
 import kotlin.js.Math.PI
 
@@ -53,15 +54,105 @@ fun initLab4() {
     }
     console.log("Init buttonPerspective")
 
+    addKeyboardListener(canvas)
 
 }
 
-fun transformationMove(canvas: HTMLCanvasElement){
-    Scene.object3D?.let {
-        val dx = getAxisNumber("x")
-        val dy = getAxisNumber("y")
-        val dz = getAxisNumber("z")
+fun addKeyboardListener(canvas: HTMLCanvasElement) {
+    window.onkeydown = { event: Event ->
+        if (document.activeElement == document.body) {
+            val keyBoardEvent = event as KeyboardEvent
+            when (keyBoardEvent.key) {
+                "ArrowUp" -> {
+                    transformationMove(canvas, 0, -1, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "ArrowRight" -> {
+                    transformationMove(canvas, 1, 0, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "ArrowDown" -> {
+                    transformationMove(canvas, 0, 1, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "ArrowLeft" -> {
+                    transformationMove(canvas, -1, 0, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "+" -> {
+                    transformationScaling(canvas, 2.0, 2.0, 2.0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "-" -> {
+                    transformationScaling(canvas, 0.5, 0.5, 0.5)
+                    Scene.object3D?.draw(canvas)
+                }
+                "[" -> {
+                    Scene.object3D!!.perspective++
+                    transformationPerspective(canvas, .0, .0, 1.0 / Scene.object3D!!.perspective)
+                    Scene.object3D?.draw(canvas)
+                }
+                "]" -> {
+                    Scene.object3D!!.perspective--
+                    transformationPerspective(canvas, .0, .0, 1.0 / Scene.object3D!!.perspective)
+                    Scene.object3D?.draw(canvas)
+                }
+                "2" -> {
+                    transformationRotating(canvas, -3, 0, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "8" -> {
+                    transformationRotating(canvas, 3, 0, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "4" -> {
+                    transformationRotating(canvas, 0, -3, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "6" -> {
+                    transformationRotating(canvas, 0, 3, 0)
+                    Scene.object3D?.draw(canvas)
+                }
+                "1", "7" -> {
+                    transformationRotating(canvas, 0, 0, -3)
+                    Scene.object3D?.draw(canvas)
+                }
+                "3", "9" -> {
+                    transformationRotating(canvas, 0, 0, 3)
+                    Scene.object3D?.draw(canvas)
+                }
+                "x" -> {
+                    transformationReflection(canvas, -1, 1, 1)
+                    Scene.object3D?.draw(canvas)
+                }
+                "y" -> {
+                    transformationReflection(canvas, 1, -1, 1)
+                    Scene.object3D?.draw(canvas)
+                }
+                "z" -> {
+                    transformationReflection(canvas, 1, 1, -1)
+                    Scene.object3D?.draw(canvas)
+                }
+                else -> {
+                }
+            }
+        }
+    }
+}
 
+fun transformationMove(canvas: HTMLCanvasElement) {
+    val dx: Int = getAxisNumber("x")
+    val dy: Int = getAxisNumber("y")
+    val dz: Int = getAxisNumber("z")
+
+    transformationMove(canvas,dx,dy,dz)
+
+    Scene.object3D?.draw(canvas)
+}
+
+
+fun transformationMove(canvas: HTMLCanvasElement, dx: Int, dy: Int, dz: Int){
+    Scene.object3D?.let {
         val t = matrixOf(4, 4,
                 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -95,15 +186,24 @@ fun transformationMove(canvas: HTMLCanvasElement){
                 }
             }
         }
-        Scene.object3D?.draw(canvas)
     }
 }
 
 fun transformationRotating(canvas: HTMLCanvasElement){
+    val rx = getAxisNumber("x")
+    val ry = getAxisNumber("y")
+    val rz = getAxisNumber("z")
+
+    transformationRotating(canvas, rx, ry, rz)
+
+    Scene.object3D?.draw(canvas)
+}
+
+fun transformationRotating(canvas: HTMLCanvasElement, rx: Int, ry: Int, rz: Int){
     Scene.object3D?.let {
-        val rx = getAxisNumber("x")
-        val ry = getAxisNumber("y")
-        val rz = getAxisNumber("z")
+
+        val centre = Scene.object3D!!.getCentre()
+        transformationMove(canvas, (-centre.x).toInt(), (-centre.y).toInt(), (-centre.z).toInt())
 
         val cosZ: Double = Math.cos(rz * PI / 180)
         val sinZ: Double = Math.sin(rz * PI / 180)
@@ -159,22 +259,32 @@ fun transformationRotating(canvas: HTMLCanvasElement){
                 }
             }
         }
-        Scene.object3D?.draw(canvas)
+
+        transformationMove(canvas, (centre.x).toInt(), (centre.y).toInt(), (centre.z).toInt())
     }
 }
 
-
 fun transformationScaling(canvas: HTMLCanvasElement){
+    val sx = if (getAxisNumber("x") == 0) 1.0 else getAxisNumber("x").toDouble()
+    val sy = if (getAxisNumber("y") == 0) 1.0 else getAxisNumber("y").toDouble()
+    val sz = if (getAxisNumber("z") == 0) 1.0 else getAxisNumber("z").toDouble()
+
+    transformationScaling(canvas, sx, sy, sz)
+
+    Scene.object3D?.draw(canvas)
+}
+
+fun transformationScaling(canvas: HTMLCanvasElement, sx: Double, sy: Double, sz: Double){
     Scene.object3D?.let {
-        val sx = if (getAxisNumber("x") == 0) 1 else getAxisNumber("x")
-        val sy = if (getAxisNumber("y") == 0) 1 else getAxisNumber("y")
-        val sz = if (getAxisNumber("z") == 0) 1 else getAxisNumber("z")
+
+        val centre = Scene.object3D!!.getCentre()
+        transformationMove(canvas, (-centre.x).toInt(), (-centre.y).toInt(), (-centre.z).toInt())
 
         val s = matrixOf(4, 4,
-                sx, 0, 0, 0,
-                0, sy, 0, 0,
-                0, 0, sz, 0,
-                0, 0, 0, 1
+                sx, .0, .0, .0,
+                .0, sy, .0, .0,
+                .0, .0, sz, .0,
+                .0, .0, .0, 1.0
         )
 
         val points = Scene.object3D?.points
@@ -203,15 +313,23 @@ fun transformationScaling(canvas: HTMLCanvasElement){
                 }
             }
         }
-        Scene.object3D?.draw(canvas)
+
+        transformationMove(canvas, (centre.x).toInt(), (centre.y).toInt(), (centre.z).toInt())
     }
 }
 
 fun transformationReflection(canvas: HTMLCanvasElement){
+    val rx = if (getAxisNumber("x") == 0) 1 else -1
+    val ry = if (getAxisNumber("y") == 0) 1 else -1
+    val rz = if (getAxisNumber("z") == 0) 1 else -1
+
+    transformationReflection(canvas, rx, ry, rz)
+
+    Scene.object3D?.draw(canvas)
+}
+
+fun transformationReflection(canvas: HTMLCanvasElement, rx: Int, ry: Int, rz: Int){
     Scene.object3D?.let {
-        val rx = if (getAxisNumber("x") == 0) 1 else -1
-        val ry = if (getAxisNumber("y") == 0) 1 else -1
-        val rz = if (getAxisNumber("z") == 0) 1 else -1
 
         val r = matrixOf(4, 4,
                 rx, 0, 0, 0,
@@ -246,19 +364,25 @@ fun transformationReflection(canvas: HTMLCanvasElement){
                 }
             }
         }
-        Scene.object3D?.draw(canvas)
     }
 }
 
 fun transformationPerspective(canvas: HTMLCanvasElement){
+    val oneOndx = if (getAxisNumber("x") == 0) .0 else 1.0 / getAxisNumber("x")
+    val oneOndy = if (getAxisNumber("y") == 0) .0 else 1.0 / getAxisNumber("y")
+    val oneOndz = if (getAxisNumber("z") == 0) .0 else 1.0 / getAxisNumber("z")
+
+    transformationPerspective(canvas, oneOndx, oneOndy, oneOndz)
+
+    Scene.object3D?.draw(canvas)
+}
+
+fun transformationPerspective(canvas: HTMLCanvasElement, oneOndx: Double, oneOndy: Double, oneOndz: Double){
     Scene.object3D?.let {
-        val oneOndx = if (getAxisNumber("x") == 0) .0 else 1.0 / getAxisNumber("x")
-        val oneOndy = if (getAxisNumber("y") == 0) .0 else 1.0 / getAxisNumber("y")
-        val oneOndz = if (getAxisNumber("z") == 0) .0 else 1.0 / getAxisNumber("z")
 
         val r = matrixOf(4, 4,
-            1.0, 0.0, 0.0, oneOndy,
-            0.0, 1.0, 0.0, oneOndx,
+            1.0, 0.0, 0.0, oneOndx,
+            0.0, 1.0, 0.0, oneOndy,
             0.0, 0.0, 1.0, oneOndz,
             0.0, 0.0, 0.0, 0.0
         )
@@ -289,7 +413,6 @@ fun transformationPerspective(canvas: HTMLCanvasElement){
                 }
             }
         }
-        Scene.object3D?.draw(canvas)
     }
 }
 
@@ -310,12 +433,11 @@ fun loadFile(input: HTMLInputElement, canvas: HTMLCanvasElement) {
             object3dJson.points.forEach { point ->
                 listOfPoinus.add(Coordinate4D(point[0], point[1], point[2], point[3]))
             }
-            when(object3dJson.type){
-                "cube" -> Scene.object3D = Cube(listOfPoinus)
-                else -> {
-                    console.log("Not correct type")
-                }
+            val listOfEdges = arrayListOf<Edge>()
+            object3dJson.edges.forEach { edge ->
+                listOfEdges.add(Edge(edge[0], edge[1]))
             }
+            Scene.object3D = Object3D(listOfPoinus, listOfEdges)
             Scene.object3D!!.draw(canvas)
         }
         reader.readAsText(file)

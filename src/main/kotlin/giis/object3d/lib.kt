@@ -15,7 +15,8 @@ data class Coordinate4D(var x: Double,
                         var w: Double)
 
 data class Object3dJSON(val type: String,
-                        val points: Array<Array<Double>>)
+                        val points: Array<Array<Double>>,
+                        val edges: Array<Array<Int>>)
 
 fun drawLine(source: Coordinate, target: Coordinate, canvas: HTMLCanvasElement) {
     val (x1, y1) = source
