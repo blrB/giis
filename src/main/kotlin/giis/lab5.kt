@@ -63,6 +63,8 @@ fun drawConvexHull(elementId: String, algorithm: String){
 
 fun polarAngle(p1: Coordinate, p2: Coordinate) = Math.atan2((p1.y - p2.y).toDouble(), (p1.x - p2.x).toDouble())
 
+fun polarAngleR(p1: Coordinate, p2: Coordinate) = Math.atan2((p1.y - p2.y).toDouble(), (p2.x - p1.x).toDouble())
+
 fun rotate(a: Coordinate, b: Coordinate, c: Coordinate) = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
 
 fun drawGraham(points: ArrayList<Coordinate>): ArrayList<Coordinate> {
@@ -91,7 +93,29 @@ fun drawGraham(points: ArrayList<Coordinate>): ArrayList<Coordinate> {
 }
 
 fun drawJarvis(points: ArrayList<Coordinate>): ArrayList<Coordinate> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    points.sortBy { it.y }
+    val p0 = points.first()
+    val pk = points.last()
+
+    val vertex = arrayListOf(p0)
+    var pushPoint: Coordinate
+    do {
+        val tempPoints = ArrayList(points)
+        tempPoints.removeAll(vertex)
+        pushPoint = tempPoints.maxBy { polarAngle(it, vertex.last()) }!!
+        console.log(pushPoint)
+        vertex.add(pushPoint)
+    } while (pushPoint != pk)
+    do {
+        val tempPoints = ArrayList(points)
+        tempPoints.removeAll(vertex)
+        tempPoints.add(p0)
+        pushPoint = tempPoints.minBy { polarAngleR(it, vertex.last()) }!!
+        console.log(pushPoint)
+        vertex.add(pushPoint)
+    } while (pushPoint != p0)
+
+    return vertex
 }
 
 fun drawConvexHullByVertex(points: ArrayList<Coordinate>, canvas: HTMLCanvasElement){
