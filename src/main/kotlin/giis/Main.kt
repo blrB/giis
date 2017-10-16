@@ -8,7 +8,6 @@ import kotlin.browser.window
 object Scene {
     var scale = 8.0
     var size = 75
-    val waitTime = 0
     var objects = ArrayList<ObjectForDraw>()
     var object3D : Object3D? = null
 }
@@ -21,6 +20,7 @@ fun main(args: Array<String>) {
         initLab2()
         initLab3()
         initLab4()
+        initLab5()
     }
 }
 

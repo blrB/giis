@@ -121,3 +121,9 @@ class BSpline(val points: ArrayList<Coordinate>): ObjectForDraw() {
     }
 }
 
+class ConvexHull(val points: ArrayList<Coordinate>): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawConvexHullByVertex(points, canvas)
+    }
+}
+
