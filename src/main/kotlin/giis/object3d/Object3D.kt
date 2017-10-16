@@ -2,6 +2,7 @@ package giis.object3d
 
 import giis.Coordinate
 import giis.Scene
+import giis.drawBresenham
 import giis.render
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -25,7 +26,7 @@ class Object3D(val points: ArrayList<Coordinate4D>,
             val source2D = Coordinate(Math.round(source.x / source.w), Math.round(source.y / source.w))
             val target2D = Coordinate(Math.round(target.x / target.w), Math.round(target.y / target.w))
 
-            drawLine(source2D, target2D, canvas)
+            drawBresenham(source2D, target2D, canvas)
         }
     }
 

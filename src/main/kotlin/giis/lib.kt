@@ -1,6 +1,7 @@
 package giis
 
 import org.w3c.dom.CanvasRenderingContext2D
+import org.w3c.dom.EventSource
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
@@ -26,22 +27,15 @@ data class Color(val r: Int,
 
 fun CanvasRenderingContext2D.render() {
     this.clearRect(0.0, 0.0, Scene.size.toDouble(), Scene.size.toDouble())
-
-    Scene.array.forEachIndexed { x, y, z, a, color ->
-        this.fillStyle = if (color != null) "rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})"
-                    else "rgba(255, 255, 255, 0)"
-        this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
-    }
+    Scene.objects.forEach { it.draw(canvas) }
 }
 
 fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
     this.fillStyle = "rgba(0, 0, 0, 1)"
-    Scene.array.set(x, y, z, a, Color(0,0,0,1.0))
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
 }
 
 fun CanvasRenderingContext2D.drawAlfaPixel(alfa: Double, x: Int, y: Int, z: Int = 0, a: Int = 0) {
-    Scene.array.set(x, y, z, a, Color(0,0,0, alfa))
     this.fillStyle = "rgba(0, 0, 0, $alfa)"
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
     this.fillStyle = "rgba(0, 0, 0, 1)"
@@ -62,3 +56,68 @@ fun getMousePosOnCanvas(canvas: HTMLCanvasElement, event: Event): Coordinate {
     val y = evt.clientY - rect.top
     return Coordinate((x / Scene.scale).toInt(), (y / Scene.scale).toInt())
 }
+
+abstract class ObjectForDraw {
+    open fun draw(canvas: HTMLCanvasElement) {}
+}
+
+class DDA(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawDDA(source, target, canvas)
+    }
+}
+
+class Bresenham(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawBresenham(source, target, canvas)
+    }
+}
+
+class Wu(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawWu(source, target, canvas)
+    }
+}
+
+class Circle(val center: Coordinate, val radius: Int): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawCircleAlgorithm(center, radius, canvas)
+    }
+}
+
+class Ellipse(val center: Coordinate, val a: Int, val b: Int): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawEllipseAlgorithm(center, a, b, canvas)
+    }
+}
+
+class Hyperbola(val center: Coordinate, val a: Int, val b: Int): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawHyperbolaAlgorithm(center, a, b, canvas)
+    }
+}
+
+class Parabola(val center: Coordinate, val a: Int): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawParabolaAlgorithm(center, a, canvas)
+    }
+}
+
+class Hermite(val points: ArrayList<Coordinate>): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawHermite(points, canvas.getContext("2d") as CanvasRenderingContext2D)
+    }
+}
+
+class Bezier(val points: ArrayList<Coordinate>): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawBezier(points, canvas.getContext("2d") as CanvasRenderingContext2D)
+    }
+}
+
+class BSpline(val points: ArrayList<Coordinate>): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {
+        drawBSpline(points, canvas.getContext("2d") as CanvasRenderingContext2D)
+    }
+}
+

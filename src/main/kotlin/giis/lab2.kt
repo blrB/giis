@@ -46,6 +46,7 @@ fun drawCircle(elementId: String) {
         if (points.size == 2) {
             val radius = calcRadius(points[0], points[1])
             drawCircleAlgorithm(points[0], radius, canvas)
+            Scene.objects.add(Circle(points[0],radius))
             points.clear()
             canvas.onclick = null
         }
@@ -63,6 +64,7 @@ fun drawEllipse(elementId: String) {
             val a = Math.abs(points[0].x - points[1].x).toInt()
             val b = Math.abs(points[0].y - points[2].y).toInt()
             drawEllipseAlgorithm(points[0], a, b, canvas)
+            Scene.objects.add(Ellipse(points[0], a, b))
             points.clear()
             canvas.onclick = null
         }
@@ -80,6 +82,7 @@ fun drawHyperbola(elementId: String) {
             val a = Math.abs(points[0].x - points[1].x).toInt()
             val b = Math.abs(points[0].y - points[2].y).toInt()
             drawHyperbolaAlgorithm(points[0], a, b, canvas)
+            Scene.objects.add(Hyperbola(points[0], a, b))
             points.clear()
             canvas.onclick = null
         }
@@ -96,6 +99,7 @@ fun drawParabola(elementId: String) {
         if (points.size == 2) {
             val a = Math.abs(points[0].y - points[1].y).toInt()
             drawParabolaAlgorithm(points[0], a, canvas)
+            Scene.objects.add(Parabola(points[0], a))
             points.clear()
             canvas.onclick = null
         }
@@ -110,7 +114,7 @@ fun calcRadius(p1: Coordinate, p2: Coordinate): Int {
     return Math.sqrt(Math.pow(max,2.0) + Math.pow(min,2.0) ).toInt()
 }
 
-fun waitDrawCircle(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
+fun drawCirclePoints(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
     context.drawPixel(x + center.x, y + center.y)
     context.drawPixel(-x + center.x, -y + center.y)
     context.drawPixel(x + center.x, -y + center.y)
@@ -118,15 +122,15 @@ fun waitDrawCircle(context: CanvasRenderingContext2D, center: Coordinate, i: Int
     console.log("Step $i: delta(i): $deltaOld; d:$d; d*:$dz; pixel:$pixel; x:${x + center.x}; y:${y + center.y}; delta(i+1):$delta Plot(${x + center.x},${y + center.y})")
 }
 
-fun waitDrawEllipse(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
-    waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+fun drawEllipsePoints(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
+    drawCirclePoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
 }
 
-fun waitDrawHyperbola(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
-    waitDrawCircle(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+fun drawHyperbolaPoints(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
+    drawCirclePoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
 }
 
-fun waitDrawParabola(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
+fun drawParabolaPoints(context: CanvasRenderingContext2D, center: Coordinate, i: Int, deltaOld: Int, d: Int, dz: Int, pixel: Char, x: Int, y: Int, delta: Int){
     context.drawPixel(x + center.x, y + center.y)
     context.drawPixel(-x + center.x, y + center.y)
     console.log("Step $i: delta(i): $deltaOld; d:$d; d*:$dz; pixel:$pixel; x:${x + center.x}; y:${y + center.y}; delta(i+1):$delta Plot(${x + center.x},${y + center.y})")
@@ -139,7 +143,7 @@ fun drawCircleAlgorithm(center: Coordinate, radius: Int, canvas: HTMLCanvasEleme
     console.log("Draw Circle: center - (${center.x};${center.y}), radius - $radius")
     val limit = y - radius
     var delta = 2 - 2 * radius
-    window.setTimeout(::waitDrawCircle, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
+    drawCirclePoints(context, center, 0, 0, 0, 0, '0', x, y, delta)
     var i = 0
     while (y > limit) {
         i++
@@ -150,7 +154,7 @@ fun drawCircleAlgorithm(center: Coordinate, radius: Int, canvas: HTMLCanvasEleme
             y -= 1
             delta += 1 - 2 * y
             pixel = 'V'
-            window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
+            drawCirclePoints(context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
         val d = 2 * delta + 2 * y - 1
@@ -158,14 +162,14 @@ fun drawCircleAlgorithm(center: Coordinate, radius: Int, canvas: HTMLCanvasEleme
             x += 1
             delta += 1 + 2 * x
             pixel = 'H'
-            window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, d, 0, pixel, x, y, delta)
+            drawCirclePoints(context, center, i, deltaOld, d, 0, pixel, x, y, delta)
             continue
         }
         x += 1
         y -= 1
         delta += 2 * x - 2 * y + 2
         pixel = 'D'
-        window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+        drawCirclePoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
 }
 
@@ -178,7 +182,7 @@ fun drawEllipseAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasE
     console.log("Draw Ellipse: center - (${center.x};${center.y}), a - $a, b - $b")
     val limit = y - b
     var delta = aPow2 + bPow2 - 2 * aPow2 * b
-    window.setTimeout(::waitDrawEllipse, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
+    drawEllipsePoints(context, center, 0, 0, 0, 0, '0', x, y, delta)
     var i = 0
     while (y > limit) {
         i++
@@ -189,7 +193,7 @@ fun drawEllipseAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasE
             y -= 1
             delta += aPow2 - 2 * y * aPow2
             pixel = 'V'
-            window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
+            drawCirclePoints(context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
         val d = 2 * delta + 2 * y * aPow2 - 1
@@ -197,14 +201,14 @@ fun drawEllipseAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanvasE
             x += 1
             delta += bPow2 + 2 * x * bPow2
             pixel = 'H'
-            window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, d, 0, pixel, x, y, delta)
+            drawCirclePoints(context, center, i, deltaOld, d, 0, pixel, x, y, delta)
             continue
         }
         x += 1
         y -= 1
         delta += bPow2 * (2 * x + 1) + aPow2 * (1 - 2 * y)
         pixel = 'D'
-        window.setTimeout(::waitDrawCircle, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+        drawCirclePoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
 }
 
@@ -217,7 +221,7 @@ fun drawHyperbolaAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanva
     var y = b
     console.log("Draw Hyperbola: center - (${center.x};${center.y}), a - $a, b - $b")
     var delta = aPow2 + 2 * aPow2 * b - bPow2
-    window.setTimeout(::waitDrawEllipse, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
+    drawEllipsePoints(context, center, 0, 0, 0, 0, '0', x, y, delta)
     var i = 0
     while (i < 50) {
         i++
@@ -228,7 +232,7 @@ fun drawHyperbolaAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanva
             x += 1
             delta -=  bPow2 * 2 * x + bPow2
             pixel = 'H'
-            window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
+            drawHyperbolaPoints(context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
         val d = 2 * delta + bPow2 * (2 * x + 1)
@@ -236,14 +240,14 @@ fun drawHyperbolaAlgorithm(center: Coordinate, a: Int, b: Int, canvas: HTMLCanva
             y += 1
             delta += aPow2 * 2 * y + aPow2
             pixel = 'V'
-            window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, d, 0, pixel, x, y, delta)
+            drawHyperbolaPoints(context, center, i, deltaOld, d, 0, pixel, x, y, delta)
             continue
         }
         x += 1
         y += 1
         delta +=  aPow2 * (2 * y + 1) - bPow2 * (2 * x + 1)
         pixel = 'D'
-        window.setTimeout(::waitDrawHyperbola, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+        drawHyperbolaPoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
 }
 
@@ -254,7 +258,7 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
     var y = 0
     console.log("Draw Parabola: center - (${center.x};${center.y}), a - $a")
     var delta = 1 - 2 * a
-    window.setTimeout(::waitDrawParabola, 50, context, center, 0, 0, 0, 0, '0', x, y, delta)
+    drawParabolaPoints(context, center, 0, 0, 0, 0, '0', x, y, delta)
     var i = 0
     while (i < 50) {
         i++
@@ -265,7 +269,7 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
             y -= 1
             delta -= 2 * a
             pixel = 'V'
-            window.setTimeout(::waitDrawParabola, 100 * i, context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
+            drawParabolaPoints(context, center, i, deltaOld, 0, dz, pixel, x, y, delta)
             continue
         }
         val d = 2 * delta + 2 * a
@@ -273,13 +277,13 @@ fun drawParabolaAlgorithm(center: Coordinate, a: Int, canvas: HTMLCanvasElement)
             x += 1
             delta += 2 * x + 1
             pixel = 'H'
-            window.setTimeout(::waitDrawParabola, 100 * i, context, center, i, deltaOld, d, 0, pixel, x, y, delta)
+            drawParabolaPoints(context, center, i, deltaOld, d, 0, pixel, x, y, delta)
             continue
         }
         x += 1
         y -= 1
         delta += 2 * x + 1 - 2 * a
         pixel = 'D'
-        window.setTimeout(::waitDrawParabola, 100 * i, context, center, i, deltaOld, d, dz, pixel, x, y, delta)
+        drawParabolaPoints(context, center, i, deltaOld, d, dz, pixel, x, y, delta)
     }
 }
