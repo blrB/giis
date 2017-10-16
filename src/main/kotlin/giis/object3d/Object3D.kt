@@ -1,21 +1,20 @@
 package giis.object3d
 
 import giis.Coordinate
+import giis.ObjectForDraw
 import giis.Scene
 import giis.drawBresenham
-import giis.render
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.js.Math
 
 class Object3D(val points: ArrayList<Coordinate4D>,
-               val edges: ArrayList<Edge>){
+               val edges: ArrayList<Edge>): ObjectForDraw(){
 
     var perspective = 10
 
-    fun draw(canvas: HTMLCanvasElement) {
+    override fun draw(canvas: HTMLCanvasElement) {
         val context = canvas.getContext("2d") as CanvasRenderingContext2D
-        context.render()
 
         console.log("Draw object3D")
 

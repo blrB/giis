@@ -52,8 +52,8 @@ fun drawConvexHull(elementId: String, algorithm: String){
                 }
             }
             val convexHull = ConvexHull(ArrayList(convexHullPoints))
-            Scene.objects.add(convexHull)
-            convexHull.draw(canvas)
+            Scene.convexHull = convexHull
+            context.render()
         }
         canvas.onclick = null
         buttonStop.disabled = true

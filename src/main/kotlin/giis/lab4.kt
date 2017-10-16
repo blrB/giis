@@ -2,6 +2,7 @@ package giis
 
 import com.ichipsea.kotlin.matrix.*
 import giis.object3d.*
+import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLInputElement
@@ -62,76 +63,77 @@ fun addKeyboardListener(canvas: HTMLCanvasElement) {
     window.onkeydown = { event: Event ->
         if (document.activeElement == document.body) {
             val keyBoardEvent = event as KeyboardEvent
+            val context = canvas.getContext("2d") as CanvasRenderingContext2D
             when (keyBoardEvent.key) {
                 "ArrowUp" -> {
                     transformationMove(canvas, 0, -1, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "ArrowRight" -> {
                     transformationMove(canvas, 1, 0, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "ArrowDown" -> {
                     transformationMove(canvas, 0, 1, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "ArrowLeft" -> {
                     transformationMove(canvas, -1, 0, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "+" -> {
                     transformationScaling(canvas, 2.0, 2.0, 2.0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "-" -> {
                     transformationScaling(canvas, 0.5, 0.5, 0.5)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "[" -> {
                     Scene.object3D!!.perspective++
                     transformationPerspective(canvas, .0, .0, 1.0 / Scene.object3D!!.perspective)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "]" -> {
                     Scene.object3D!!.perspective--
                     transformationPerspective(canvas, .0, .0, 1.0 / Scene.object3D!!.perspective)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "2" -> {
                     transformationRotating(canvas, -3, 0, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "8" -> {
                     transformationRotating(canvas, 3, 0, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "4" -> {
                     transformationRotating(canvas, 0, -3, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "6" -> {
                     transformationRotating(canvas, 0, 3, 0)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "1", "7" -> {
                     transformationRotating(canvas, 0, 0, -3)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "3", "9" -> {
                     transformationRotating(canvas, 0, 0, 3)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "x" -> {
                     transformationReflection(canvas, -1, 1, 1)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "y" -> {
                     transformationReflection(canvas, 1, -1, 1)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 "z" -> {
                     transformationReflection(canvas, 1, 1, -1)
-                    Scene.object3D?.draw(canvas)
+                    context.render()
                 }
                 else -> {
                 }
@@ -147,7 +149,7 @@ fun transformationMove(canvas: HTMLCanvasElement) {
 
     transformationMove(canvas,dx,dy,dz)
 
-    Scene.object3D?.draw(canvas)
+    (canvas.getContext("2d") as CanvasRenderingContext2D).render()
 }
 
 
@@ -196,7 +198,7 @@ fun transformationRotating(canvas: HTMLCanvasElement){
 
     transformationRotating(canvas, rx, ry, rz)
 
-    Scene.object3D?.draw(canvas)
+    (canvas.getContext("2d") as CanvasRenderingContext2D).render()
 }
 
 fun transformationRotating(canvas: HTMLCanvasElement, rx: Int, ry: Int, rz: Int){
@@ -271,7 +273,7 @@ fun transformationScaling(canvas: HTMLCanvasElement){
 
     transformationScaling(canvas, sx, sy, sz)
 
-    Scene.object3D?.draw(canvas)
+    (canvas.getContext("2d") as CanvasRenderingContext2D).render()
 }
 
 fun transformationScaling(canvas: HTMLCanvasElement, sx: Double, sy: Double, sz: Double){
@@ -325,7 +327,7 @@ fun transformationReflection(canvas: HTMLCanvasElement){
 
     transformationReflection(canvas, rx, ry, rz)
 
-    Scene.object3D?.draw(canvas)
+    (canvas.getContext("2d") as CanvasRenderingContext2D).render()
 }
 
 fun transformationReflection(canvas: HTMLCanvasElement, rx: Int, ry: Int, rz: Int){
@@ -374,7 +376,7 @@ fun transformationPerspective(canvas: HTMLCanvasElement){
 
     transformationPerspective(canvas, oneOndx, oneOndy, oneOndz)
 
-    Scene.object3D?.draw(canvas)
+    (canvas.getContext("2d") as CanvasRenderingContext2D).render()
 }
 
 fun transformationPerspective(canvas: HTMLCanvasElement, oneOndx: Double, oneOndy: Double, oneOndz: Double){
@@ -438,7 +440,7 @@ fun loadFile(input: HTMLInputElement, canvas: HTMLCanvasElement) {
                 listOfEdges.add(Edge(edge[0], edge[1]))
             }
             Scene.object3D = Object3D(listOfPoinus, listOfEdges)
-            Scene.object3D!!.draw(canvas)
+            (canvas.getContext("2d") as CanvasRenderingContext2D).render()
         }
         reader.readAsText(file)
     }

@@ -28,6 +28,8 @@ data class Color(val r: Int,
 fun CanvasRenderingContext2D.render() {
     this.clearRect(0.0, 0.0, Scene.size.toDouble(), Scene.size.toDouble())
     Scene.objects.forEach { it.draw(canvas) }
+    Scene.object3D?.draw(canvas)
+    Scene.convexHull?.draw(canvas)
 }
 
 fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
