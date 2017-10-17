@@ -23,37 +23,31 @@ fun initLab4() {
     fileInput.addEventListener("change", {
         loadFile(fileInput, canvas)
     })
-    console.log("Init fileInput")
 
     val buttonMoving = document.getElementById("moving") as HTMLButtonElement
     buttonMoving.onclick = {
         transformationMove(canvas)
     }
-    console.log("Init buttonMoving")
 
     val buttonRotating = document.getElementById("rotating") as HTMLButtonElement
     buttonRotating.onclick = {
         transformationRotating(canvas)
     }
-    console.log("Init buttonRotating")
 
     val buttonScaling = document.getElementById("scaling") as HTMLButtonElement
     buttonScaling.onclick = {
         transformationScaling(canvas)
     }
-    console.log("Init buttonScaling")
 
     val buttonReflection = document.getElementById("reflection") as HTMLButtonElement
     buttonReflection.onclick = {
         transformationReflection(canvas)
     }
-    console.log("Init buttonReflection")
 
     val buttonPerspective = document.getElementById("perspective") as HTMLButtonElement
     buttonPerspective.onclick = {
         transformationPerspective(canvas)
     }
-    console.log("Init buttonPerspective")
 
     addKeyboardListener(canvas)
 

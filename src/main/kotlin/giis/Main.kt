@@ -10,7 +10,7 @@ object Scene {
     var size = 75
     var objects = ArrayList<ObjectForDraw>()
     var object3D : Object3D? = null
-    var convexHull : ConvexHull? = null
+    var polygon: Polygon? = null
 }
 
 

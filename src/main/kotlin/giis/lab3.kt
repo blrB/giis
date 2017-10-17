@@ -15,19 +15,16 @@ fun initLab3() {
     buttonHermite.onclick = {
         drawCurves("canvas", "hermite")
     }
-    console.log("Init buttonHermite")
 
     val buttonBezier = document.getElementById("bezier") as HTMLButtonElement
     buttonBezier.onclick = {
         drawCurves("canvas", "bezier")
     }
-    console.log("Init buttonBezier")
 
     val buttonBSpline = document.getElementById("b-spline") as HTMLButtonElement
     buttonBSpline.onclick = {
         drawCurvesPointsN("canvas", "bspline")
     }
-    console.log("Init buttonBSpline")
 
 }
 

@@ -14,19 +14,16 @@ fun initLab1() {
     buttonDDA.onclick = {
         drawLine("canvas", "dda")
     }
-    console.log("Init buttonDDA")
 
     val buttonBresenham = document.getElementById("bresenham") as HTMLButtonElement
     buttonBresenham.onclick = {
         drawLine("canvas", "bresenham")
     }
-    console.log("Init buttonBresenham")
 
     val buttonWu = document.getElementById("wu") as HTMLButtonElement
     buttonWu.onclick = {
         drawLine("canvas", "wu")
     }
-    console.log("Init buttonWu")
 
 }
 

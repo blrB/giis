@@ -14,8 +14,6 @@ class Object3D(val points: ArrayList<Coordinate4D>,
     var perspective = 10
 
     override fun draw(canvas: HTMLCanvasElement) {
-        val context = canvas.getContext("2d") as CanvasRenderingContext2D
-
         console.log("Draw object3D")
 
         edges.forEach { (sourceIndex, targetIndex) ->

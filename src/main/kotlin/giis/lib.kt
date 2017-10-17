@@ -1,7 +1,6 @@
 package giis
 
 import org.w3c.dom.CanvasRenderingContext2D
-import org.w3c.dom.EventSource
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
@@ -29,12 +28,18 @@ fun CanvasRenderingContext2D.render() {
     this.clearRect(0.0, 0.0, Scene.size.toDouble(), Scene.size.toDouble())
     Scene.objects.forEach { it.draw(canvas) }
     Scene.object3D?.draw(canvas)
-    Scene.convexHull?.draw(canvas)
+    Scene.polygon?.draw(canvas)
 }
 
 fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
     this.fillStyle = "rgba(0, 0, 0, 1)"
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
+}
+
+fun CanvasRenderingContext2D.drawColorPixel(x: Int, y: Int, r: Int, g: Int, b: Int) {
+    this.fillStyle = "rgba($r, $g, $b, 1)"
+    this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
+    this.fillStyle = "rgba(0, 0, 0, 1)"
 }
 
 fun CanvasRenderingContext2D.drawAlfaPixel(alfa: Double, x: Int, y: Int, z: Int = 0, a: Int = 0) {
@@ -123,9 +128,12 @@ class BSpline(val points: ArrayList<Coordinate>): ObjectForDraw() {
     }
 }
 
-class ConvexHull(val points: ArrayList<Coordinate>): ObjectForDraw() {
+class Polygon(val points: ArrayList<Coordinate>): ObjectForDraw() {
     override fun draw(canvas: HTMLCanvasElement) {
-        drawConvexHullByVertex(points, canvas)
+        drawPolygonByVertex(points, canvas)
+        if (isConvex(this)) {
+            findInternalNormals(this)
+        }
     }
 }
 

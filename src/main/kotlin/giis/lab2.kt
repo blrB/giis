@@ -14,25 +14,21 @@ fun initLab2() {
     buttonCircle.onclick = {
         drawCircle("canvas")
     }
-    console.log("Init buttonCircle")
 
     val buttonEllipse = document.getElementById("ellipse") as HTMLButtonElement
     buttonEllipse.onclick = {
         drawEllipse("canvas")
     }
-    console.log("Init buttonEllipse")
 
     val buttonHyperbola = document.getElementById("hyperbola") as HTMLButtonElement
     buttonHyperbola.onclick = {
         drawHyperbola("canvas")
     }
-    console.log("Init buttonHyperbola")
 
     val buttonParabola = document.getElementById("parabola") as HTMLButtonElement
     buttonParabola.onclick = {
         drawParabola("canvas")
     }
-    console.log("Init buttonParabola")
 
 }
 
