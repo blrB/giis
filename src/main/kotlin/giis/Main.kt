@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
         initLab3()
         initLab4()
         initLab5()
+        initLab6()
     }
 }
 

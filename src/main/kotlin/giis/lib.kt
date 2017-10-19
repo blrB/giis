@@ -1,5 +1,6 @@
 package giis
 
+import org.khronos.webgl.get
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.Event
@@ -36,10 +37,17 @@ fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
 }
 
-fun CanvasRenderingContext2D.drawColorPixel(x: Int, y: Int, r: Int, g: Int, b: Int) {
+fun CanvasRenderingContext2D.drawColorPixel(x: Int, y: Int, r: Int, g: Int, b: Int, w: Double = 1.0, h: Double = 1.0) {
     this.fillStyle = "rgba($r, $g, $b, 1)"
-    this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
+    this.fillRect(x.toDouble(), y.toDouble(), w, h)
     this.fillStyle = "rgba(0, 0, 0, 1)"
+}
+
+fun CanvasRenderingContext2D.isWhitePixel(x: Int, y: Int): Boolean {
+    val scaleX = x * Scene.scale
+    val scaleY = y * Scene.scale
+    val p = getImageData(scaleX, scaleY, 1.0, 1.0).data
+    return (p[3].toInt() == 0 && p[2].toInt() == 0 && p[1].toInt() == 0 && p[0].toInt() == 0)
 }
 
 fun CanvasRenderingContext2D.drawAlfaPixel(alfa: Double, x: Int, y: Int, z: Int = 0, a: Int = 0) {
@@ -55,6 +63,14 @@ fun Math.sign(value: Number): Int = when {
     }
 
 fun Math.abs(value: Int): Double = Math.abs(value.toDouble())
+
+fun ArrayList<Coordinate>.push(element: Coordinate){
+    add(0, element)
+}
+
+fun ArrayList<Coordinate>.pop(): Coordinate{
+    return removeAt(0)
+}
 
 fun getMousePosOnCanvas(canvas: HTMLCanvasElement, event: Event): Coordinate {
     val rect = canvas.getBoundingClientRect()
