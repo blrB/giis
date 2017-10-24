@@ -6,8 +6,8 @@ import kotlin.browser.document
 import kotlin.browser.window
 
 object Scene {
-    var scale = 8.0
-    var size = 75
+    var scale = 4.0
+    var size = 150
     var objects = ArrayList<ObjectForDraw>()
     var object3D : Object3D? = null
     var polygon: Polygon? = null
@@ -23,6 +23,7 @@ fun main(args: Array<String>) {
         initLab4()
         initLab5()
         initLab6()
+        initLab7()
     }
 }
 

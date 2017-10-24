@@ -32,8 +32,7 @@ fun CanvasRenderingContext2D.render() {
     Scene.polygon?.draw(canvas)
 }
 
-fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int, z: Int = 0, a: Int = 0) {
-    this.fillStyle = "rgba(0, 0, 0, 1)"
+fun CanvasRenderingContext2D.drawPixel(x: Int, y: Int) {
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
 }
 
@@ -51,9 +50,9 @@ fun CanvasRenderingContext2D.isWhitePixel(x: Int, y: Int): Boolean {
 }
 
 fun CanvasRenderingContext2D.drawAlfaPixel(alfa: Double, x: Int, y: Int, z: Int = 0, a: Int = 0) {
-    this.fillStyle = "rgba(0, 0, 0, $alfa)"
+    this.globalAlpha = alfa
     this.fillRect(x.toDouble(), y.toDouble(), 1.0, 1.0)
-    this.fillStyle = "rgba(0, 0, 0, 1)"
+    this.globalAlpha = 1.0
 }
 
 fun Math.sign(value: Number): Int = when {
@@ -84,19 +83,23 @@ abstract class ObjectForDraw {
     open fun draw(canvas: HTMLCanvasElement) {}
 }
 
-class DDA(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+abstract class LineForDraw(open val source: Coordinate, open val target: Coordinate): ObjectForDraw() {
+    override fun draw(canvas: HTMLCanvasElement) {}
+}
+
+class DDA(override val source: Coordinate, override val target: Coordinate): LineForDraw(source, target) {
     override fun draw(canvas: HTMLCanvasElement) {
         drawDDA(source, target, canvas)
     }
 }
 
-class Bresenham(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+class Bresenham(override val source: Coordinate, override val target: Coordinate): LineForDraw(source, target) {
     override fun draw(canvas: HTMLCanvasElement) {
         drawBresenham(source, target, canvas)
     }
 }
 
-class Wu(val source: Coordinate, val target: Coordinate): ObjectForDraw() {
+class Wu(override val source: Coordinate, override val target: Coordinate): LineForDraw(source, target) {
     override fun draw(canvas: HTMLCanvasElement) {
         drawWu(source, target, canvas)
     }
