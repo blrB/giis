@@ -8,17 +8,15 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.js.Math
 
-class Object3D(val points: ArrayList<Coordinate4D>,
-               val edges: ArrayList<Edge>): ObjectForDraw(){
+open class Object3D(open val points: ArrayList<Coordinate4D>,
+                    open val edges: ArrayList<Edge>): ObjectForDraw(){
 
     var perspective = 10
 
     override fun draw(canvas: HTMLCanvasElement) {
         console.log("Draw object3D")
 
-        edges.forEach { (sourceIndex, targetIndex) ->
-            val source = points[sourceIndex]
-            val target = points[targetIndex]
+        edges.forEach { (source, target) ->
 
             val source2D = Coordinate(Math.round(source.x / source.w), Math.round(source.y / source.w))
             val target2D = Coordinate(Math.round(target.x / target.w), Math.round(target.y / target.w))

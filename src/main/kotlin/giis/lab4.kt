@@ -431,7 +431,7 @@ fun loadFile(input: HTMLInputElement, canvas: HTMLCanvasElement) {
             }
             val listOfEdges = arrayListOf<Edge>()
             object3dJson.edges.forEach { edge ->
-                listOfEdges.add(Edge(edge[0], edge[1]))
+                listOfEdges.add(Edge(listOfPoinus[edge[0]], listOfPoinus[edge[1]]))
             }
             Scene.object3D = Object3D(listOfPoinus, listOfEdges)
             (canvas.getContext("2d") as CanvasRenderingContext2D).render()
