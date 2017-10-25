@@ -115,13 +115,17 @@ fun clippingLine(line: LineForDraw, canvas: HTMLCanvasElement) {
                     val yMin = Math.min(source.y, target.y)
                     val yMax = Math.max(source.y, target.y)
 
-                    if (left.y in (Window.bottom..Window.top) && left.y in (yMin..yMax))
+                    if (left.y in (Window.bottom..Window.top) && left.y in (yMin..yMax) &&
+                            Window.left in (xMin..xMax))
                         points.push(left)
-                    if (right.y in (Window.bottom..Window.top) && right.y in (yMin..yMax))
+                    if (right.y in (Window.bottom..Window.top) && right.y in (yMin..yMax) &&
+                            Window.right in (xMin..xMax))
                         points.push(right)
-                    if (bottom.x in (Window.left..Window.right) && bottom.x in (xMin..xMax))
+                    if (bottom.x in (Window.left..Window.right) && bottom.x in (xMin..xMax) &&
+                            Window.bottom in (yMin..yMax))
                         points.push(bottom)
-                    if (top.x in (Window.left..Window.right) && top.x in (xMin..xMax))
+                    if (top.x in (Window.left..Window.right) && top.x in (xMin..xMax) &&
+                            Window.top in (yMin..yMax))
                         points.push(top)
 
                     if (sourceMask.nulls())
@@ -141,7 +145,8 @@ fun clippingLine(line: LineForDraw, canvas: HTMLCanvasElement) {
                 }
             }
 
-            drawBresenham(points[0], points[1], canvas)
+            if (points.size >= 2)
+                drawBresenham(points[0], points[1], canvas)
         }
     }
 }

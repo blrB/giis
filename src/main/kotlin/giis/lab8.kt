@@ -44,13 +44,6 @@ fun loadFilePlane(input: HTMLInputElement, canvas: HTMLCanvasElement) {
                 }
                 listOfEPlanes.add(Plane(edgeForPlane))
             }
-
-            listOfEPlanes.forEach { plane ->
-                console.log(plane.getPoints())
-                console.log("a: ${plane.getA()} b: ${plane.getB()} c: ${plane.getC()} d: ${plane.getD()}")
-                console.log("")
-            }
-
             Scene.object3D = Object3DPlane(listOfPoinus, listOfEdges, listOfEPlanes)
             (canvas.getContext("2d") as CanvasRenderingContext2D).render()
         }
