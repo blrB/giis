@@ -54,6 +54,11 @@ fun initLab7() {
     buttonClipping.onclick = {
         drawWindow("canvas")
     }
+
+    val buttonCyrusBeck = document.getElementById("cyrus—beck") as HTMLButtonElement
+    buttonCyrusBeck.onclick = {
+        drawConvexHullWindow("canvas")
+    }
 }
 
 fun drawWindow(elementId: String) {
@@ -75,17 +80,47 @@ fun drawWindow(elementId: String) {
     context.fillStyle = "rgba(0, 0, 0, 1)"
 }
 
+fun drawConvexHullWindow(elementId: String){
+    val canvas = document.getElementById(elementId) as HTMLCanvasElement
+    val context = canvas.getContext("2d") as CanvasRenderingContext2D
+    val points = arrayListOf<Coordinate>()
+
+    canvas.onclick = {
+        val pos = getMousePosOnCanvas(canvas, it)
+        context.drawPixel(pos.x, pos.y)
+        points.add(pos)
+    }
+
+    val buttonStop = document.getElementById("сonvex-hull-window-stop") as HTMLButtonElement
+    buttonStop.disabled = false
+    buttonStop.onclick = {
+        console.log("click")
+        if (points.size > 2) {
+            val convexHullPoints = drawGraham(points)
+            val convexHull = Polygon(ArrayList(convexHullPoints))
+            context.render()
+            context.fillStyle = "rgba(0, 255, 0, 1)"
+            convexHull.draw(canvas)
+            clippingLinesInPolygon(canvas, convexHull)
+            context.fillStyle = "rgba(0, 0, 0, 1)"
+        }
+        canvas.onclick = null
+        buttonStop.disabled = true
+        points.clear()
+    }
+}
+
 fun clippingLines(canvas: HTMLCanvasElement) {
     Scene.objects.filter {
         it is LineForDraw
     }.map {
         it as LineForDraw
     }.forEach {
-        clippingLine(it, canvas)
+        clippingLineCohenSutherland(it, canvas)
     }
 }
 
-fun clippingLine(line: LineForDraw, canvas: HTMLCanvasElement) {
+fun clippingLineCohenSutherland(line: LineForDraw, canvas: HTMLCanvasElement) {
     val source = line.source
     val target = line.target
 
@@ -150,3 +185,96 @@ fun clippingLine(line: LineForDraw, canvas: HTMLCanvasElement) {
         }
     }
 }
+
+fun clippingLinesInPolygon(canvas: HTMLCanvasElement, polygon: Polygon) {
+    Scene.objects.filter {
+        it is LineForDraw
+    }.map {
+        it as LineForDraw
+    }.forEach {
+        clippingLineCyrusBeck(it, canvas, polygon)
+    }
+}
+
+fun clippingLineCyrusBeck(line: LineForDraw, canvas: HTMLCanvasElement, polygon: Polygon) {
+    val source = line.source
+    val target = line.target
+
+    val d = Pair(target.x - source.x, target.y - source.y)
+
+    val vertex = polygon.points
+
+    val internalNormals = findInternalNormals(polygon)
+
+    var tn = 0.0
+    var tv = 1.0
+
+    var visible = true
+
+    val wnList = arrayListOf<Int>()
+    val wnDnList = arrayListOf<Int>()
+
+    vertex.forEachIndexed { index, _ ->
+        val f = vertex[index]
+        val normal = internalNormals[index]
+
+        val w = Pair(source.x - f.x, source.y - f.y)
+
+        val wn = w.first * normal.first + w.second * normal.second
+        val dn = d.first * normal.first + d.second * normal.second
+
+        if (dn== 0){
+            if (wn < 0){
+                visible = false
+                return
+            }
+        } else {
+            val t = -(wn.toDouble() / dn)
+            if (t in (0.0..1.0)){
+                if (dn < 0) {
+                    if (t < tv)
+                    {
+                        tv = t
+                    }
+                    if (t < tn)
+                    {
+                        visible = false
+                        return
+                    }
+                }
+                if (dn > 0) {
+                    if (t > tn)
+                    {
+                        tn = t
+                    }
+                    if (t > tv)
+                    {
+                        visible = false
+                        return
+                    }
+                }
+            } else {
+                wnList.add(wn)
+                wnDnList.add(wn + dn)
+            }
+        }
+    }
+
+    if (vertex.size == wnList.size){
+        val gr0wn = wnList.filter { it > 0 }
+        val gr0wnDn = wnDnList.filter { it > 0 }
+        if (gr0wn.size == gr0wnDn.size && gr0wn.size == vertex.size){
+            drawBresenham(source, target, canvas)
+        }
+    } else if (visible && tn < tv) {
+        val sm0wn = wnList.filter { it < 0 }
+        val sm0wnDn = wnDnList.filter { it < 0 }
+        if (!(sm0wn.isNotEmpty() && sm0wnDn.isNotEmpty())) {
+            val s = Coordinate((source.x + (target.x - source.x) * tn).toInt(), (source.y + (target.y - source.y) * tn).toInt())
+            val t = Coordinate((source.x + (target.x - source.x) * tv).toInt(), (source.y + (target.y - source.y) * tv).toInt())
+            drawBresenham(s, t, canvas)
+        }
+    }
+}
+
+

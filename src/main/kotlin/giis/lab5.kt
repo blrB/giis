@@ -228,7 +228,7 @@ fun findInternalNormals(polygon: Polygon): ArrayList<Pair<Int,Int>> {
         val v0 = vertex[index]
         val v1 = vertex[((index + 1) % vertex.size)]
         val v2 = vertex[((index + 2) % vertex.size)]
-        if (Math.sign(-(v1.y - v0.y) * (v2.x - v0.x) + (v1.x - v0.x) * (v2.y - v0.y)) == 1){
+        if (Math.sign(-(v1.y - v0.y) * (v2.x - v0.x) + (v1.x - v0.x) * (v2.y - v0.y)) == -1){
             internalNormals.add(vectorsPerpendicular[index])
         } else {
             internalNormals.add(Pair((-1) * vectorsPerpendicular[index].first, (-1) * vectorsPerpendicular[index].second))
