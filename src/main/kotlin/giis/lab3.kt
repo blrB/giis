@@ -13,35 +13,22 @@ fun initLab3() {
 
     val buttonHermite = document.getElementById("hermite") as HTMLButtonElement
     buttonHermite.onclick = {
-        drawCurves("canvas", ::drawHermite)
+        drawCurves("canvas", "hermite")
     }
-    console.log("Init buttonHermite")
 
     val buttonBezier = document.getElementById("bezier") as HTMLButtonElement
     buttonBezier.onclick = {
-        drawCurves("canvas", ::drawBezier)
+        drawCurves("canvas", "bezier")
     }
-    console.log("Init buttonBezier")
 
     val buttonBSpline = document.getElementById("b-spline") as HTMLButtonElement
     buttonBSpline.onclick = {
-        drawCurvesPointsN("canvas", ::drawBSpline)
+        drawCurvesPointsN("canvas", "bspline")
     }
-    console.log("Init buttonBSpline")
 
 }
 
-fun waitDrawCurves(context: CanvasRenderingContext2D, t: Int, x: Number, y: Number) {
-    context.drawPixel(x.toInt(), y.toInt())
-    console.log("t: $t; x(t): $x; y(t): $y")
-}
-
-fun waitDrawBSpline(context: CanvasRenderingContext2D, i: Int, t: Int, x: Number, y: Number) {
-    context.drawPixel(x.toInt(), y.toInt())
-    console.log("i: $i; t: $t; x(t): $x; y(t): $y")
-}
-
-fun drawCurves(elementId: String, drawAlgorithm: (points: ArrayList<Coordinate>, context: CanvasRenderingContext2D) -> Unit) {
+fun drawCurves(elementId: String, algorithm: String) {
     val canvas = document.getElementById(elementId) as HTMLCanvasElement
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     val points = arrayListOf<Coordinate>()
@@ -50,14 +37,26 @@ fun drawCurves(elementId: String, drawAlgorithm: (points: ArrayList<Coordinate>,
         val pos = getMousePosOnCanvas(canvas, it)
         points.add(pos)
         if (points.size == 4) {
-            drawAlgorithm(points, context)
+            when (algorithm) {
+                "hermite" -> {
+                    drawHermite(points, context)
+                    Scene.objects.add(Hermite(ArrayList(points)))
+                }
+                "bezier" -> {
+                    drawBezier(points, context)
+                    Scene.objects.add(Bezier(ArrayList(points)))
+                }
+                else -> {
+                    console.log("Not found algorithm $algorithm")
+                }
+            }
             points.clear()
             canvas.onclick = null
         }
     }
 }
 
-fun drawCurvesPointsN(elementId: String, drawAlgorithm: (points: ArrayList<Coordinate>, context: CanvasRenderingContext2D) -> Unit) {
+fun drawCurvesPointsN(elementId: String, algorithm: String) {
     val canvas = document.getElementById(elementId) as HTMLCanvasElement
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     val points = arrayListOf<Coordinate>()
@@ -68,7 +67,15 @@ fun drawCurvesPointsN(elementId: String, drawAlgorithm: (points: ArrayList<Coord
         val pos = getMousePosOnCanvas(canvas, it)
         points.add(pos)
         if (points.size == size) {
-            drawAlgorithm(points, context)
+            when (algorithm) {
+                "bspline" -> {
+                    drawBSpline(points, context)
+                    Scene.objects.add(BSpline(ArrayList(points)))
+                }
+                else -> {
+                    console.log("Not found algorithm $algorithm")
+                }
+            }
             points.clear()
             canvas.onclick = null
         }
@@ -96,9 +103,9 @@ fun drawHermite(points: ArrayList<Coordinate>, context: CanvasRenderingContext2D
 
     val b = matrixOf(2, 4,
             p1.x, p1.y,
-            p2.x, p2.y,
-            p3.x, p3.y,
-            p4.x, p4.y
+            p4.x, p4.y,
+            p3.x - p1.x, p3.y - p1.y,
+            p4.x - p2.x, p4.y - p2.y
     )
 
     val c: Matrix<Number> = a x b
@@ -110,7 +117,8 @@ fun drawHermite(points: ArrayList<Coordinate>, context: CanvasRenderingContext2D
         val r = tMatrix x c
         val x = r[0, 0]
         val y = r[1, 0]
-        window.setTimeout(::waitDrawCurves, 10 * i, context, t, x.toInt(), y.toInt())
+        context.drawPixel(x.toInt(), y.toInt())
+        console.log("t: $t; x(t): $x; y(t): $y")
         t += step
         i++
     }
@@ -151,7 +159,8 @@ fun drawBezier(points: ArrayList<Coordinate>, context: CanvasRenderingContext2D)
         val r = tMatrix x c
         val x = r[0, 0]
         val y = r[1, 0]
-        window.setTimeout(::waitDrawCurves, 10 * i, context, t, x.toInt(), y.toInt())
+        context.drawPixel(x.toInt(), y.toInt())
+        console.log("t: $t; x(t): $x; y(t): $y")
         t += step
         i++
     }
@@ -189,7 +198,8 @@ fun drawBSpline(points: ArrayList<Coordinate>, context: CanvasRenderingContext2D
             val r = tMatrix x c
             val x = r[0, 0] / 6
             val y = r[1, 0] / 6
-            window.setTimeout(::waitDrawBSpline, 10 * k, context, i, t, x.toInt(), y.toInt())
+            context.drawPixel(x.toInt(), y.toInt())
+            console.log("i: $i; t: $t; x(t): $x; y(t): $y")
             t += step
             k++
         }
